@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverydei — ঢাকার বিশ্বস্ত ডেলিভারি সার্ভিস</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange: #F15A22;
+  --orange-dark: #D14C1A;
+  --orange-pale: #FFF3EE;
+  --orange-pale2: #FFE4D4;
+  --black: #111;
+  --gray-50: #F9F9F9;
+  --gray-100: #F2F2F2;
+  --gray-200: #E5E5E5;
+  --gray-400: #A0A0A0;
+  --gray-600: #666;
+  --gray-800: #333;
+  --white: #fff;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--black); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+/* NAV */
+nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0 6%; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.nav-logo { font-weight: 700; font-size: 20px; color: var(--orange); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { text-decoration: none; color: var(--gray-600); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--orange); }
+.btn-nav { background: var(--orange); color: white; border: none; padding: 9px 22px; border-radius: var(--radius); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.2s; font-family: 'Hind Siliguri', sans-serif; }
+.btn-nav:hover { background: var(--orange-dark); }
+
+/* HERO */
+.hero { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); padding: 80px 6%; display: flex; align-items: center; justify-content: space-between; gap: 60px; flex-wrap: wrap; }
+.hero-left { flex: 1; min-width: 300px; max-width: 560px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--orange-pale); border: 1px solid var(--orange-pale2); color: var(--orange); font-size: 13px; font-weight: 600; padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; font-family: 'Hind Siliguri', sans-serif; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 { font-size: clamp(32px, 4vw, 52px); font-weight: 700; line-height: 1.15; color: var(--black); margin-bottom: 10px; letter-spacing: -0.5px; }
+.hero h1 span { color: var(--orange); }
+.hero-bn { font-family: 'Hind Siliguri', sans-serif; font-size: clamp(18px, 2.5vw, 24px); font-weight: 600; color: var(--gray-600); margin-bottom: 18px; }
+.hero p { font-size: 15px; color: var(--gray-600); line-height: 1.75; margin-bottom: 36px; font-family: 'Hind Siliguri', sans-serif; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary { background: var(--orange); color: white; padding: 12px 28px; border-radius: var(--radius); font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: background 0.2s, transform 0.15s; font-family: 'Hind Siliguri', sans-serif; }
+.btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+.btn-outline { background: white; color: var(--black); padding: 12px 28px; border-radius: var(--radius); font-weight: 600; font-size: 15px; text-decoration: none; border: 1.5px solid var(--gray-200); transition: border-color 0.2s, transform 0.15s; font-family: 'Hind Siliguri', sans-serif; }
+.btn-outline:hover { border-color: var(--orange); transform: translateY(-1px); }
+.hero-right { flex: 1; min-width: 260px; max-width: 360px; }
+.price-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 24px; }
+.price-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--gray-100); }
+.price-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--orange-pale); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.price-card-header h3 { font-size: 15px; font-weight: 700; color: var(--black); font-family: 'Hind Siliguri', sans-serif; }
+.price-card-header p { font-size: 12px; color: var(--gray-400); }
+.price-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
+.price-row:last-child { border-bottom: none; }
+.price-row .label { color: var(--gray-600); font-family: 'Hind Siliguri', sans-serif; }
+.price-row .value { font-weight: 700; color: var(--black); }
+.price-row .value span { color: var(--orange); }
+
+/* STATS */
+.stats-bar { background: var(--black); padding: 28px 6%; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+.stat { text-align: center; }
+.stat .num { font-size: 26px; font-weight: 700; color: var(--orange); }
+.stat .lbl { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; font-family: 'Hind Siliguri', sans-serif; }
+
+/* SECTIONS */
+section { padding: 80px 6%; }
+.section-header { margin-bottom: 48px; }
+.section-header.center { text-align: center; }
+.section-label { display: inline-block; background: var(--orange-pale); color: var(--orange); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 14px; }
+.section-header h2 { font-size: clamp(24px, 3.5vw, 38px); font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: var(--black); margin-bottom: 8px; }
+.section-header h2 span { color: var(--orange); }
+.section-header .bn-title { font-family: 'Hind Siliguri', sans-serif; font-size: clamp(18px, 2.5vw, 24px); font-weight: 700; color: var(--black); margin-bottom: 8px; }
+.section-header p { font-size: 15px; color: var(--gray-600); max-width: 500px; line-height: 1.7; font-family: 'Hind Siliguri', sans-serif; }
+.section-header.center p { margin: 0 auto; }
+.bg-light { background: var(--gray-50); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
+
+/* SERVICES */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.service-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 28px 24px; transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s; }
+.service-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.06); border-color: var(--orange-pale2); }
+.service-card.featured { background: var(--orange); border-color: var(--orange); }
+.service-card.featured h3, .service-card.featured p { color: white; }
+.service-card.featured p { opacity: 0.85; }
+.s-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--orange-pale); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
+.service-card.featured .s-icon { background: rgba(255,255,255,0.2); }
+.service-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; font-family: 'Hind Siliguri', sans-serif; }
+.service-card .s-en { font-size: 12px; color: var(--orange); font-weight: 600; margin-bottom: 10px; }
+.service-card.featured .s-en { color: rgba(255,255,255,0.7); }
+.service-card p { font-size: 14px; color: var(--gray-600); line-height: 1.65; font-family: 'Hind Siliguri', sans-serif; }
+
+/* PRICING */
+.pricing-tabs { display: flex; gap: 0; margin-bottom: 28px; border: 1px solid var(--gray-200); border-radius: var(--radius); overflow: hidden; width: fit-content; }
+.tab-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; background: white; border: none; cursor: pointer; color: var(--gray-600); font-family: 'Hind Siliguri', sans-serif; transition: background 0.2s, color 0.2s; border-right: 1px solid var(--gray-200); }
+.tab-btn:last-child { border-right: none; }
+.tab-btn.active { background: var(--orange); color: white; }
+.tab-btn:hover:not(.active) { background: var(--gray-50); color: var(--black); }
+.pricing-layout { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 20px; align-items: start; }
+.price-table { border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; background: white; }
+.price-table-header { background: var(--orange); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+.price-table-header h4 { color: white; font-size: 14px; font-weight: 600; font-family: 'Hind Siliguri', sans-serif; }
+.price-table table { width: 100%; border-collapse: collapse; }
+.price-table th { background: var(--gray-50); padding: 10px 16px; font-size: 11px; font-weight: 700; color: var(--gray-600); text-align: left; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid var(--gray-200); }
+.price-table td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-800); }
+.price-table tr:last-child td { border-bottom: none; }
+.price-table tr:hover td { background: var(--gray-50); }
+.price-table td:first-child { color: var(--gray-600); }
+.price-table td.price { font-weight: 700; color: var(--black); }
+.notes-card { background: var(--orange-pale); border: 1px solid var(--orange-pale2); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 16px; }
+.notes-card h4 { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 12px; font-family: 'Hind Siliguri', sans-serif; }
+.note-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; font-family: 'Hind Siliguri', sans-serif; color: var(--gray-800); }
+.note-item:last-child { margin-bottom: 0; }
+.note-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); margin-top: 6px; flex-shrink: 0; }
+.extra-charges { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 22px; }
+.extra-charges h4 { font-size: 13px; font-weight: 700; margin-bottom: 12px; font-family: 'Hind Siliguri', sans-serif; color: var(--black); }
+.extra-item { display: flex; gap: 10px; margin-bottom: 9px; font-size: 13px; line-height: 1.6; font-family: 'Hind Siliguri', sans-serif; color: var(--gray-600); }
+.extra-item:last-child { margin-bottom: 0; }
+
+/* FAQ */
+.faq-list { max-width: 720px; }
+.faq-item { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; background: white; }
+.faq-q { width: 100%; text-align: left; background: none; border: none; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--black); font-family: 'Hind Siliguri', sans-serif; }
+.faq-q:hover { color: var(--orange); }
+.faq-icon { font-size: 20px; color: var(--orange); transition: transform 0.3s; flex-shrink: 0; line-height: 1; }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; font-size: 14px; color: var(--gray-600); line-height: 1.75; font-family: 'Hind Siliguri', sans-serif; }
+.faq-a.open { max-height: 200px; }
+.faq-a-inner { padding: 0 20px 16px; }
+.faq-icon.open { transform: rotate(45deg); }
+
+/* CTA */
+.cta-wrap { padding: 0 6% 80px; }
+.cta-section { background: var(--black); border-radius: var(--radius-lg); padding: 72px 8%; text-align: center; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(241,90,34,0.12) 0%, transparent 70%); top: -150px; left: 50%; transform: translateX(-50%); pointer-events: none; }
+.cta-section h2 { font-size: clamp(28px, 4vw, 46px); font-weight: 700; color: white; letter-spacing: -0.5px; margin-bottom: 8px; position: relative; }
+.cta-section h2 span { color: var(--orange); }
+.cta-section .cta-bn { font-family: 'Hind Siliguri', sans-serif; font-size: 18px; color: rgba(255,255,255,0.55); margin-bottom: 36px; }
+.cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-wa { background: #25D366; color: white; padding: 13px 28px; border-radius: var(--radius); font-weight: 600; font-size: 15px; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: background 0.2s; font-family: 'Hind Siliguri', sans-serif; }
+.btn-wa:hover { background: #1da855; }
+.btn-ghost { background: rgba(255,255,255,0.08); color: white; padding: 13px 28px; border-radius: var(--radius); font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid rgba(255,255,255,0.15); transition: background 0.2s; font-family: 'Hind Siliguri', sans-serif; }
+.btn-ghost:hover { background: rgba(255,255,255,0.14); }
+
+/* FOOTER */
+footer { background: var(--gray-50); border-top: 1px solid var(--gray-200); padding: 48px 6% 24px; }
+.footer-top { display: flex; gap: 48px; flex-wrap: wrap; margin-bottom: 40px; }
+.footer-brand { flex: 2; min-width: 180px; }
+.footer-brand .logo { font-weight: 700; font-size: 18px; color: var(--orange); margin-bottom: 10px; }
+.footer-brand p { font-size: 13px; color: var(--gray-400); line-height: 1.7; max-width: 240px; font-family: 'Hind Siliguri', sans-serif; }
+.footer-col { flex: 1; min-width: 130px; }
+.footer-col h5 { font-size: 12px; font-weight: 700; color: var(--black); margin-bottom: 12px; letter-spacing: 0.3px; text-transform: uppercase; }
+.footer-col a { display: block; font-size: 13px; color: var(--gray-600); text-decoration: none; margin-bottom: 8px; transition: color 0.2s; font-family: 'Hind Siliguri', sans-serif; }
+.footer-col a:hover { color: var(--orange); }
+.footer-col p { font-size: 13px; color: var(--gray-600); margin-bottom: 6px; font-family: 'Hind Siliguri', sans-serif; }
+.footer-bottom { border-top: 1px solid var(--gray-200); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.footer-bottom p { font-size: 12px; color: var(--gray-400); }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 56px 5%; flex-direction: column; }
+  section { padding: 60px 5%; }
+  .pricing-layout { grid-template-columns: 1fr !important; }
+  .pricing-tabs { width: 100%; }
+  .pricing-tabs { overflow-x: auto; }
+  .cta-wrap { padding: 0 4% 60px; }
+  .cta-section { padding: 52px 6%; }
+  .stats-bar { gap: 28px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" rx="7" fill="#F15A22"/><path d="M5 9h10l4 4-4 4H5V9z" fill="white"/><circle cx="9" cy="18" r="1.8" fill="#F15A22"/><circle cx="16" cy="18" r="1.8" fill="#F15A22"/></svg>
+    Deliverydei
+  </a>
+  <div class="nav-links">
+    <a href="#services">সার্ভিস</a>
+    <a href="#pricing" class="active">মূল্য তালিকা</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">যোগাযোগ</a>
+  </div>
+  <a href="https://wa.me/880XXXXXXXXXX" class="btn-nav">শুরু করুন</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-tag"><span class="dot"></span>ঢাকায় সার্ভিস চালু আছে</div>
+    <h1>Fast & Reliable<br><span>Delivery</span> in Dhaka</h1>
+    <div class="hero-bn">দ্রুত, নিরাপদ, সাশ্রয়ী ডেলিভারি</div>
+    <p>আপনার পার্সেল, কেক, ফুড বা যেকোনো পণ্য — আমরা পিকআপ করে সময়মতো পৌঁছে দেব। আপনি শুধু ব্যবসায় মনোযোগ দিন।</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/880XXXXXXXXXX" class="btn-primary">
+        <svg width="17" height="17" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.304A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.978 7.978 0 01-4.078-1.117l-.291-.174-3.02.791.807-2.94-.19-.302A7.978 7.978 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        WhatsApp করুন
+      </a>
+      <a href="#pricing" class="btn-outline">মূল্য দেখুন →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="price-card">
+      <div class="price-card-header">
+        <div class="price-icon">🛵</div>
+        <div><h3>ঢাকার মধ্যে ডেলিভারি</h3><p>Inside Dhaka — all areas</p></div>
+      </div>
+      <div class="price-row"><span class="label">শিডিউল ডেলিভারি</span><span class="value">৳<span>৮০</span> থেকে</span></div>
+      <div class="price-row"><span class="label">ইনস্ট্যান্ট ডেলিভারি</span><span class="value">৳<span>১০০</span> থেকে</span></div>
+      <div class="price-row"><span class="label">সেম ডে ডেলিভারি</span><span class="value">৳<span>১২০</span> ফ্ল্যাট</span></div>
+      <div class="price-row"><span class="label">COD সার্ভিস</span><span class="value" style="color:var(--orange)">উপলব্ধ ✓</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">৳৮০</div><div class="lbl">প্রতি ডেলিভারি থেকে</div></div>
+  <div class="stat"><div class="num">৩ ধরন</div><div class="lbl">ডেলিভারি সার্ভিস</div></div>
+  <div class="stat"><div class="num">COD</div><div class="lbl">ক্যাশ অন ডেলিভারি</div></div>
+  <div class="stat"><div class="num">সারা ঢাকা</div><div class="lbl">কভারেজ এরিয়া</div></div>
+</div>
+
+<section id="services" class="bg-light">
+  <div class="section-header reveal">
+    <span class="section-label">আমাদের সার্ভিস</span>
+    <div class="bn-title">৩ ধরনের ডেলিভারি সার্ভিস</div>
+    <h2>Built for <span>Dhaka Businesses</span></h2>
+    <p>কেক, ফুড, পার্সেল — যাই হোক, আমরা সময়মতো পৌঁছে দেব।</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card featured">
+      <div class="s-icon">📅</div>
+      <h3>শিডিউল ডেলিভারি</h3>
+      <div class="s-en">Scheduled Delivery</div>
+      <p>আগেই তারিখ ও সময় ঠিক করে রাইডার বুক করুন। মার্চেন্টদের জন্য সবচেয়ে নির্ভরযোগ্য সার্ভিস।</p>
+    </div>
+    <div class="service-card">
+      <div class="s-icon">⚡</div>
+      <h3>ইনস্ট্যান্ট ডেলিভারি</h3>
+      <div class="s-en">Instant Delivery</div>
+      <p>জরুরি ডেলিভারির জন্য ১ ঘণ্টার মধ্যে পিকআপ। দ্রুত ডেলিভারির নিশ্চয়তা দিতে আমরা সবসময় প্রস্তুত।</p>
+    </div>
+    <div class="service-card">
+      <div class="s-icon">🌅</div>
+      <h3>সেম ডে ডেলিভারি</h3>
+      <div class="s-en">Same Day Delivery</div>
+      <p>৬–৮ ঘণ্টার মধ্যে ফ্রোজেন ফুড, টাব কেক ও পার্সেল একই দিনে পৌঁছে দেওয়া হয়।</p>
+    </div>
+    <div class="service-card">
+      <div class="s-icon">🍽️</div>
+      <h3>রেস্টুরেন্ট পার্টনার</h3>
+      <div class="s-en">Restaurant Partner</div>
+      <p>রেস্টুরেন্টের পক্ষ থেকে কাস্টমারের কাছে খাবার পৌঁছে দিই। জোন অনুযায়ী রাইডার নিশ্চিত।</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="section-header center reveal">
+    <span class="section-label">মূল্য তালিকা</span>
+    <div class="bn-title">সহজ ও স্বচ্ছ মূল্য নির্ধারণ</div>
+    <h2>Simple, <span>Transparent Pricing</span></h2>
+    <p>আপনার ব্যবসার প্রয়োজন অনুযায়ী প্যাকেজ বেছে নিন। কোনো লুকানো চার্জ নেই।</p>
+  </div>
+  <div class="pricing-tabs reveal">
+    <button class="tab-btn active" onclick="switchTab('schedule',this)">শিডিউল ডেলিভারি</button>
+    <button class="tab-btn" onclick="switchTab('instant',this)">ইনস্ট্যান্ট ডেলিভারি</button>
+    <button class="tab-btn" onclick="switchTab('sameday',this)">সেম ডে ডেলিভারি</button>
+  </div>
+
+  <div id="tab-schedule" class="pricing-layout reveal">
+    <div class="price-table">
+      <div class="price-table-header"><span style="font-size:16px">📦</span><h4>শিডিউল ডেলিভারি — পার্সেল ও ফুড (৳)</h4></div>
+      <table>
+        <thead><tr><th>দূরত্ব (KM)</th><th>ফুড / পার্সেল</th><th>কেক</th></tr></thead>
+        <tbody>
+          <tr><td>১ – ৩</td><td class="price">৳ ৮০</td><td class="price">৳ ১৫০</td></tr>
+          <tr><td>৪ – ৬</td><td class="price">৳ ৮০</td><td class="price">৳ ১৫০</td></tr>
+          <tr><td>৭ – ৯</td><td class="price">৳ ১৫০</td><td class="price">৳ ২০০</td></tr>
+          <tr><td>১০ – ১২</td><td class="price">৳ ১৫০</td><td class="price">৳ ২০০</td></tr>
+          <tr><td>১৩ – ১৫</td><td class="price">৳ ২০০</td><td class="price">৳ ২৫০</td></tr>
+          <tr><td>১৬ – ১৮</td><td class="price">৳ ২০০</td><td class="price">৳ ২৫০</td></tr>
+          <tr><td>১৯ – ২১</td><td class="price">৳ ২৫০</td><td class="price">৳ ৩০০</td></tr>
+          <tr><td>২২ – ২৪</td><td class="price">৳ ২৫০</td><td class="price">৳ ৩০০</td></tr>
+          <tr><td>২৫ – ২৭</td><td class="price">৳ ৩৫০</td><td class="price">৳ ৩৫০</td></tr>
+          <tr><td>২৮ – ৩০</td><td class="price">৳ ৩৫০</td><td class="price">৳ ৩৫০</td></tr>
+          <tr><td>৩১ – ৩৬</td><td class="price">৳ ৪০০</td><td class="price">৳ ৪৫০</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="notes-card">
+        <h4>গুরুত্বপূর্ণ তথ্য</h4>
+        <div class="note-item"><div class="note-dot"></div><span>প্রতি পার্সেলে ন্যূনতম চার্জ ৮০ টাকা</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>১ কেজির বেশি হলে প্রতি কেজিতে অতিরিক্ত ২০ টাকা</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>একসাথে সর্বোচ্চ ৫টি পার্সেল দেওয়া যাবে</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>টাব কেক, ফ্রোজেন ফুড ও যেকোনো পার্সেল ডেলিভারি করা হয়</span></div>
+      </div>
+    </div>
+    <div class="extra-charges">
+      <h4>অতিরিক্ত চার্জ সমূহ</h4>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>৩ কেজির বেশি পার্সেলে প্রতি কেজিতে +২০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>২ পাউন্ডের বেশি কেকে +৪০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>আলাদা ২টি কেক একসাথে হলে +২০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>বৃষ্টির সময় +২০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>ঈদের সময় +২০ টাকা (৫ দিন)</span></div>
+    </div>
+  </div>
+
+  <div id="tab-instant" class="pricing-layout reveal" style="display:none">
+    <div class="price-table">
+      <div class="price-table-header"><span style="font-size:16px">⚡</span><h4>ইনস্ট্যান্ট ডেলিভারি — পার্সেল ও ফুড (৳)</h4></div>
+      <table>
+        <thead><tr><th>দূরত্ব (KM)</th><th>ফুড / পার্সেল</th><th>কেক</th></tr></thead>
+        <tbody>
+          <tr><td>১ – ৩</td><td class="price">৳ ১০০</td><td class="price">৳ ১৬০</td></tr>
+          <tr><td>৪ – ৬</td><td class="price">৳ ১২০</td><td class="price">৳ ১৭০</td></tr>
+          <tr><td>৭ – ৯</td><td class="price">৳ ১৬০</td><td class="price">৳ ২১০</td></tr>
+          <tr><td>১০ – ১২</td><td class="price">৳ ১৮৫</td><td class="price">৳ ২৩০</td></tr>
+          <tr><td>১৩ – ১৫</td><td class="price">৳ ২২০</td><td class="price">৳ ২৬০</td></tr>
+          <tr><td>১৬ – ১৮</td><td class="price">৳ ২৪০</td><td class="price">৳ ২৮০</td></tr>
+          <tr><td>১৯ – ২১</td><td class="price">৳ ৩০০</td><td class="price">৳ ৩১০</td></tr>
+          <tr><td>২২ – ২৪</td><td class="price">৳ ৩২০</td><td class="price">৳ ৩৩০</td></tr>
+          <tr><td>২৫ – ২৭</td><td class="price">৳ ৩৫০</td><td class="price">৳ ৩৬০</td></tr>
+          <tr><td>২৮ – ৩০</td><td class="price">৳ ৪২০</td><td class="price">৳ ৪৬০</td></tr>
+          <tr><td>৩১ – ৩৬</td><td class="price">৳ ৪৮০</td><td class="price">৳ ৫৫০</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="notes-card">
+        <h4>ইনস্ট্যান্ট সার্ভিস তথ্য</h4>
+        <div class="note-item"><div class="note-dot"></div><span>১ ঘণ্টার মধ্যে পিকআপ নিশ্চিত করা হয়</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>জরুরি ডেলিভারির জন্য সবচেয়ে উপযুক্ত</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>যেকোনো ধরনের পার্সেল গ্রহণযোগ্য</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>COD সুবিধা উপলব্ধ</span></div>
+      </div>
+    </div>
+    <div class="extra-charges">
+      <h4>অতিরিক্ত চার্জ</h4>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>৩ কেজির বেশি পার্সেলে প্রতি কেজিতে +২০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>বৃষ্টির সময় ও ঈদে +২০ টাকা</span></div>
+      <div class="extra-item"><div class="note-dot" style="background:var(--gray-400)"></div><span>কেকের ক্ষেত্রে একই অতিরিক্ত নিয়ম প্রযোজ্য</span></div>
+    </div>
+  </div>
+
+  <div id="tab-sameday" style="display:none" class="reveal">
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;">
+      <div class="price-table">
+        <div class="price-table-header"><span style="font-size:16px">🌅</span><h4>সেম ডে ডেলিভারি (৳)</h4></div>
+        <table>
+          <thead><tr><th>বিবরণ</th><th>চার্জ</th><th>নোট</th></tr></thead>
+          <tbody>
+            <tr><td>প্রতি পার্সেল (ফ্ল্যাট)</td><td class="price">৳ ১২০</td><td style="color:var(--gray-400);font-size:13px">বেস রেট</td></tr>
+            <tr><td>১ কেজির বেশি</td><td class="price">+৳ ২০/কেজি</td><td style="color:var(--gray-400);font-size:13px">প্রতি কেজিতে</td></tr>
+            <tr><td>একসাথে সর্বোচ্চ</td><td class="price">৫ পার্সেল</td><td style="color:var(--gray-400);font-size:13px">একটি ট্রিপে</td></tr>
+            <tr><td>ডেলিভারি সময়</td><td class="price">৬–৮ ঘণ্টা</td><td style="color:var(--gray-400);font-size:13px">একই দিনে</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="notes-card" style="margin-bottom:0">
+        <h4>সেম ডে তথ্য</h4>
+        <div class="note-item"><div class="note-dot"></div><span>ফ্রোজেন ফুড, টাব কেক সহ সব ধরনের পার্সেল</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>একই দিনে পৌঁছানোর নিশ্চয়তা</span></div>
+        <div class="note-item"><div class="note-dot"></div><span>COD সুবিধা উপলব্ধ</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="bg-light">
+  <div class="section-header reveal">
+    <span class="section-label">FAQ</span>
+    <div class="bn-title">সাধারণ প্রশ্মাবলী</div>
+    <h2>Common <span>Questions</span></h2>
+    <p>আমাদের সার্ভিস নিয়ে সাধারণ কিছু প্রশ্নের উত্তর।</p>
+  </div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">ডেলিভারি চার্জ কীভাবে নির্ধারণ করা হয়?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">পণ্যের ওজন, গন্তব্য এবং ডেলিভারির ধরন (শিডিউল, ইনস্ট্যান্ট বা সেম ডে) অনুযায়ী চার্জ নির্ধারণ করা হয়। উপরের মূল্য তালিকা দেখুন।</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">COD (Cash on Delivery) সুবিধা কি আছে?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, আমরা COD সার্ভিস দিয়ে থাকি। আমরা আপনার কাস্টমারের কাছ থেকে টাকা সংগ্রহ করে আপনার কাছে পৌঁছে দেব।</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">কোন কোন এলাকায় ডেলিভারি করা হয়?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">বর্তমানে আমরা ঢাকা সিটির সকল এলাকায় ডেলিভারি সার্ভিস দিচ্ছি। মিরপুর, গুলশান, ধানমন্ডি, মতিঝিল, যাত্রাবাড়ি সহ সব জায়গায়।</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">কেক ও ফ্রোজেন ফুড ডেলিভারি কি নিরাপদ?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, আমাদের রাইডাররা প্রশিক্ষিত। টাব কেক, ফ্রোজেন ফুড, ফুলের বাক্স — সব ধরনের সংবেদনশীল পণ্য সাবধানে পৌঁছে দেওয়া হয়।</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">ডেলিভারি বুক করতে কতক্ষণ আগে জানাতে হবে?<span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">শিডিউল ডেলিভারির জন্য আগের দিন জানালে সবচেয়ে ভালো। ইনস্ট্যান্ট সার্ভিসে ১ ঘণ্টার মধ্যে পিকআপ করা হয়।</div></div>
+    </div>
+  </div>
+</section>
+
+<div id="contact" class="cta-wrap">
+  <div class="cta-section reveal">
+    <h2>আজই শুরু করুন — <span>Get Started</span></h2>
+    <div class="cta-bn">আপনার ব্যবসার ডেলিভারি আমাদের উপর ছেড়ে দিন</div>
+    <div class="cta-btns">
+      <a href="https://wa.me/880XXXXXXXXXX" class="btn-wa">
+        <svg width="17" height="17" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.304A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.978 7.978 0 01-4.078-1.117l-.291-.174-3.02.791.807-2.94-.19-.302A7.978 7.978 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        WhatsApp করুন
+      </a>
+      <a href="mailto:hello@deliverydei.com" class="btn-ghost">📧 hello@deliverydei.com</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">Deliverydei</div>
+      <p>ঢাকার বিশ্বস্ত ডেলিভারি সার্ভিস। পার্সেল, কেক, ফুড — সময়মতো পৌঁছে দেওয়াই আমাদের কাজ।</p>
+    </div>
+    <div class="footer-col">
+      <h5>সার্ভিস</h5>
+      <a href="#services">শিডিউল ডেলিভারি</a>
+      <a href="#services">ইনস্ট্যান্ট ডেলিভারি</a>
+      <a href="#services">সেম ডে ডেলিভারি</a>
+      <a href="#services">রেস্টুরেন্ট পার্টনার</a>
+    </div>
+    <div class="footer-col">
+      <h5>লিংক</h5>
+      <a href="#pricing">মূল্য তালিকা</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+    </div>
+    <div class="footer-col">
+      <h5>যোগাযোগ</h5>
+      <p>📱 +880-XXXXXXXXXX</p>
+      <p>✉️ hello@deliverydei.com</p>
+      <p>📍 ঢাকা, বাংলাদেশ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Deliverydei. All rights reserved.</p>
+    <p>Made for Dhaka businesses</p>
+  </div>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i*60); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+
+function switchTab(id, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display='none');
+  document.getElementById('tab-'+id).style.display = id==='sameday' ? 'block' : 'grid';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleFaq(btn) {
+  const ans = btn.nextElementSibling;
+  const icon = btn.querySelector('.faq-icon');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+  if (!isOpen) { ans.classList.add('open'); icon.classList.add('open'); }
+}
+</script>
+</body>
+</html>
