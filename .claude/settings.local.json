@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(pkill -f \"next dev\")",
-      "Bash(pkill -f \"node\")"
+      "Bash(pkill -f \"node\")",
+      "Bash(taskkill /PID 5464 /F)"
     ]
   }
 }

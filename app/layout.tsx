@@ -28,9 +28,9 @@ export default function RootLayout({
         {children}
         <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" strategy="afterInteractive" />
         <Script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js" strategy="afterInteractive" />
-        <Script 
-          src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBbfTNcaVS6eVa9KeFXneOA8q5OhHYQa-w&libraries=places`} 
-          strategy="afterInteractive" 
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,routes`}
+          strategy="beforeInteractive"
         />
       </body>
     </html>

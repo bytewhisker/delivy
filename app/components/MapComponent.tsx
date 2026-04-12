@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 declare const L: any;
 
@@ -12,7 +12,6 @@ interface MapComponentProps {
 interface LocationMarker {
   marker: any;
   type: 'pickup' | 'delivery';
-  latlng?: any;
 }
 
 const DHAKA_AREA_COORDS: Record<string, [number, number]> = {
@@ -100,43 +99,13 @@ export default function MapComponent({ onDistanceChange, onLocationChange }: Map
       const icon = L.divIcon({
         className: 'custom-marker-container',
         html: `
-          <div style="
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          ">
+          <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
             <button 
               class="marker-remove-btn"
               onclick="event.stopPropagation(); window.removeLocationMarker('${type}')"
-              style="
-                position: absolute;
-                top: -8px;
-                right: -8px;
-                width: 20px;
-                height: 20px;
-                background: #dc2626;
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                font-size: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-              "
-            >&times;</button>
+              style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #dc2626; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; z-index: 1000;">&times;</button>
             <i class="fa-solid fa-location-dot" style="color:${color}; font-size:32px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
-            <span style="
-              background: ${color};
-              color: white;
-              padding: 2px 8px;
-              border-radius: 4px;
-              font-size: 11px;
-              font-weight: 600;
-              margin-top: -4px;
-            ">${type === 'pickup' ? 'Pickup' : 'Delivery'}</span>
+            <span style="background: ${color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-top: -4px;">${type === 'pickup' ? 'Pickup' : 'Delivery'}</span>
           </div>
         `,
         iconSize: [40, 50],
@@ -283,6 +252,7 @@ export default function MapComponent({ onDistanceChange, onLocationChange }: Map
     const marker = L.marker(latlng, { icon, draggable: true }).addTo(mapRef.current);
     
     marker.on('dragend', () => {
+      const newLatlng = marker.getLatLng();
       markersRef.current[type] = { marker, type };
       if (markersRef.current.pickup && markersRef.current.delivery) {
         updateRouteInternal();

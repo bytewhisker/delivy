@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 const MapContainer = dynamic(() => import('./MapComponent'), { 
@@ -31,31 +31,26 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
 
   const [pickupLocation, setPickupLocation] = useState<string | null>(null);
   const [deliveryLocation, setDeliveryLocation] = useState<string | null>(null);
-  
+  const [pickupCoords, setPickupCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [deliveryCoords, setDeliveryCoords] = useState<{ lat: number; lng: number } | null>(null);
+
   const [pickupQuery, setPickupQuery] = useState('');
   const [deliveryQuery, setDeliveryQuery] = useState('');
-  const [pickupResults, setPickupResults] = useState<any[]>([]);
-  const [deliveryResults, setDeliveryResults] = useState<any[]>([]);
-  const [showPickupResults, setShowPickupResults] = useState(false);
-  const [showDeliveryResults, setShowDeliveryResults] = useState(false);
 
   const pickupInputRef = useRef<HTMLInputElement>(null);
   const deliveryInputRef = useRef<HTMLInputElement>(null);
   const pickupAutocompleteRef = useRef<any>(null);
   const deliveryAutocompleteRef = useRef<any>(null);
+  const pickupContainerRef = useRef<HTMLDivElement>(null);
+  const deliveryContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     calculatePrice();
   }, [distance, service, itemType, weight]);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (pickupInputRef.current && !pickupInputRef.current.contains(e.target as Node)) {
-        setShowPickupResults(false);
-      }
-      if (deliveryInputRef.current && !deliveryInputRef.current.contains(e.target as Node)) {
-        setShowDeliveryResults(false);
-      }
+    const handleClickOutside = () => {
+      // Handle click outside for autocomplete dropdowns if needed
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -81,13 +76,10 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
             const name = place.name || place.formatted_address?.split(',')[0] || 'Pickup';
             setPickupLocation(name);
             setPickupQuery(name);
-            
-            if (typeof window !== 'undefined' && (window as any).searchLocation) {
-              (window as any).searchLocation(name, 'pickup', {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-              });
-            }
+            setPickupCoords({
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            });
           }
         });
       }
@@ -105,13 +97,10 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
             const name = place.name || place.formatted_address?.split(',')[0] || 'Delivery';
             setDeliveryLocation(name);
             setDeliveryQuery(name);
-            
-            if (typeof window !== 'undefined' && (window as any).searchLocation) {
-              (window as any).searchLocation(name, 'delivery', {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-              });
-            }
+            setDeliveryCoords({
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            });
           }
         });
       }
@@ -202,13 +191,46 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setPickupQuery(val);
-    setPickupLocation(val);
   };
 
   const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setDeliveryQuery(val);
-    setDeliveryLocation(val);
+  };
+
+  const handlePickupKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && pickupQuery.trim()) {
+      e.preventDefault();
+      // Geocode the entered location
+      const geocoder = new (window as any).google.maps.Geocoder();
+      geocoder.geocode({ address: pickupQuery + ', Dhaka, Bangladesh' }, (results: any[], status: string) => {
+        if (status === 'OK' && results[0]) {
+          const location = results[0];
+          setPickupLocation(location.formatted_address);
+          setPickupCoords({
+            lat: location.geometry.location.lat(),
+            lng: location.geometry.location.lng()
+          });
+        }
+      });
+    }
+  };
+
+  const handleDeliveryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && deliveryQuery.trim()) {
+      e.preventDefault();
+      const geocoder = new (window as any).google.maps.Geocoder();
+      geocoder.geocode({ address: deliveryQuery + ', Dhaka, Bangladesh' }, (results: any[], status: string) => {
+        if (status === 'OK' && results[0]) {
+          const location = results[0];
+          setDeliveryLocation(location.formatted_address);
+          setDeliveryCoords({
+            lat: location.geometry.location.lat(),
+            lng: location.geometry.location.lng()
+          });
+        }
+      });
+    }
   };
 
   return (
@@ -219,8 +241,12 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
         
         <div className="map-calculator-grid">
           <div className="map-container-wrap" data-aos="fade-right">
-             <MapContainer 
-               onDistanceChange={setDistance} 
+             <MapContainer
+               onDistanceChange={setDistance}
+               pickupCoords={pickupCoords || undefined}
+               deliveryCoords={deliveryCoords || undefined}
+               pickupName={pickupLocation || undefined}
+               deliveryName={deliveryLocation || undefined}
                onLocationChange={(type, name) => {
                  if (type === 'pickup') {
                    setPickupLocation(name);
@@ -244,42 +270,50 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
             
             <div className="calc-body">
               <div className="calc-row">
-                <div className="calc-group" style={{position: 'relative'}} ref={pickupInputRef}>
+                <div className="calc-group" style={{position: 'relative'}} ref={pickupContainerRef}>
                   <label><i className="fa-solid fa-circle-dot" style={{color:'#10b981'}}></i> Pickup Area</label>
                   <div className="input-wrap">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       ref={pickupInputRef}
-                      value={pickupQuery} 
+                      value={pickupQuery}
                       onChange={handlePickupChange}
-                      onFocus={() => setShowPickupResults(false)}
-                      placeholder="Search pickup location..." 
+                      onKeyDown={handlePickupKeyDown}
+                      placeholder="Search pickup location... (Press Enter to search)"
                     />
                     {pickupLocation && (
-                      <span 
+                      <span
                         style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
-                        onClick={() => { setPickupLocation(null); setPickupQuery(''); if ((window as any).removeLocationMarker) (window as any).removeLocationMarker('pickup'); }}
+                        onClick={() => {
+                          setPickupLocation(null);
+                          setPickupQuery('');
+                          setPickupCoords(null);
+                        }}
                       >
                         <i className="fa-solid fa-times"></i>
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="calc-group" style={{position: 'relative'}} ref={deliveryInputRef}>
+                <div className="calc-group" style={{position: 'relative'}} ref={deliveryContainerRef}>
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
                   <div className="input-wrap">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       ref={deliveryInputRef}
-                      value={deliveryQuery} 
+                      value={deliveryQuery}
                       onChange={handleDeliveryChange}
-                      onFocus={() => setShowDeliveryResults(false)}
-                      placeholder="Search delivery location..." 
+                      onKeyDown={handleDeliveryKeyDown}
+                      placeholder="Search delivery location... (Press Enter to search)"
                     />
                     {deliveryLocation && (
-                      <span 
+                      <span
                         style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
-                        onClick={() => { setDeliveryLocation(null); setDeliveryQuery(''); if ((window as any).removeLocationMarker) (window as any).removeLocationMarker('delivery'); }}
+                        onClick={() => {
+                          setDeliveryLocation(null);
+                          setDeliveryQuery('');
+                          setDeliveryCoords(null);
+                        }}
                       >
                         <i className="fa-solid fa-times"></i>
                       </span>
