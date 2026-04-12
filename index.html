@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deliverydei | Bangladesh's Fastest Delivery Platform</title>
+    <meta name="description" content="Join Deliverydei as a Merchant or Rider. Instant, Scheduled & Same-Day delivery for parcels, food, and cakes across Bangladesh.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet Map & Routing -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════ CREATIVE LOADER ══════════ -->
+<div id="page-loader">
+    <div class="loader-content">
+        <img src="logo.png" alt="Deliverydei Logo">
+        <div class="loader-track">
+            <div class="loader-scooter"><i class="fa-solid fa-motorcycle"></i></div>
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ HEADER ══════════ -->
+<header id="main-header">
+    <nav class="container nav-content">
+        <a href="#" class="logo">
+            <img src="logo.png" alt="Deliverydei Logo">
+        </a>
+        <div class="nav-links" id="nav-links">
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#how-it-works" class="nav-link">How it Works</a>
+            <a href="#join" class="nav-link">Join Us</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-ghost" onclick="openModal('login','')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup','merchant')">Get Started</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="home">
+    <div class="container hero-content">
+        <div class="hero-text" data-aos="fade-right">
+            <div class="hero-badge">🚀 Bangladesh's #1 Delivery</div>
+            <h1>Deliver <span class="gradient-text">Faster.</span><br>Grow <span class="gradient-text">Bigger.</span></h1>
+            <p class="hero-sub">Reliable delivery for Merchants. Real income for Riders.</p>
+            <div class="hero-cta-group">
+                <button class="btn btn-primary btn-xl" onclick="openModal('signup','merchant')">Become a Merchant</button>
+                <button class="btn btn-outline btn-xl" onclick="openModal('signup','rider')">Become a Rider</button>
+            </div>
+            <div class="hero-trust">
+                <div class="trust-avatars">
+                    <img src="https://i.pravatar.cc/32?img=1" alt="u"><img src="https://i.pravatar.cc/32?img=2" alt="u"><img src="https://i.pravatar.cc/32?img=3" alt="u">
+                </div>
+                <p><strong>15,000+</strong> merchants joined</p>
+            </div>
+        </div>
+        <div class="hero-visual" data-aos="fade-left">
+            <div class="hero-img-wrap">
+                <div class="float-card card-a" data-aos="zoom-in" data-aos-delay="600">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Instant Pickup</span>
+                </div>
+                <div class="float-card card-b" data-aos="zoom-in" data-aos-delay="800">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Safe Delivery</span>
+                </div>
+                <div class="float-card card-c" data-aos="zoom-in" data-aos-delay="1000">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>COD Ready</span>
+                </div>
+                <img src="maincover.png" alt="Deliverydei Main Cover" class="hero-img">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ FEATURE SECTION (FRONT) ══════════ -->
+<section class="front-section">
+    <div class="container front-grid">
+        <div class="front-visual" data-aos="fade-right">
+            <img src="front.png" alt="Delivery Process" class="front-img">
+        </div>
+        <div class="front-text" data-aos="fade-left">
+            <div class="section-label">Seamless Logistics</div>
+            <h2 class="section-title">Built for the <span class="gradient-text">Modern Merchant</span></h2>
+            <p>Deliverydei isn't just a delivery service; it's your business partner. Scale effortlessly with our integrated tracking and reliable fleet.</p>
+            <ul class="front-perks">
+                <li><i class="fa-solid fa-check-circle"></i> Real-time GPS Tracking</li>
+                <li><i class="fa-solid fa-check-circle"></i> Automated COD Clearance</li>
+                <li><i class="fa-solid fa-check-circle"></i> Multi-zone delivery support</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section id="services" class="services-section">
+    <div class="container">
+        <div class="section-label">Our Speeds</div>
+        <h2 class="section-title">Three Ways to <span class="gradient-text">Deliver</span></h2>
+        <div class="services-grid">
+            <div class="service-card" data-aos="fade-up">
+                <div class="service-icon-wrap scheduled-icon"><i class="fa-solid fa-calendar"></i></div>
+                <h3>Scheduled</h3>
+                <p class="service-bn">শিডিউল ডেলিভারি</p>
+                <div class="service-price-from">From <strong>৳ 80</strong></div>
+                <ul class="service-features">
+                    <li><i class="fa-solid fa-check"></i> Parcel & Food</li>
+                    <li><i class="fa-solid fa-check"></i> Cake Handling</li>
+                </ul>
+                <button class="btn btn-card" onclick="openModal('signup','merchant')">Join Now</button>
+            </div>
+            <div class="service-card service-featured" data-aos="fade-up" data-aos-delay="100">
+                <div class="featured-ribbon">Best Value</div>
+                <div class="service-icon-wrap instant-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Instant</h3>
+                <p class="service-bn">ইনস্ট্যান্ট ডেলিভারি</p>
+                <div class="service-price-from">From <strong>৳ 100</strong></div>
+                <ul class="service-features">
+                    <li><i class="fa-solid fa-check"></i> 1-Hour Pickup</li>
+                    <li><i class="fa-solid fa-check"></i> Priority Support</li>
+                </ul>
+                <button class="btn btn-primary" onclick="openModal('signup','merchant')">Join Now</button>
+            </div>
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-icon-wrap sameday-icon"><i class="fa-solid fa-sun"></i></div>
+                <h3>Same Day</h3>
+                <p class="service-bn">সেম ডে ডেলিভারি</p>
+                <div class="service-price-from">Flat <strong>৳ 120</strong></div>
+                <ul class="service-features">
+                    <li><i class="fa-solid fa-check"></i> 6-8 Hour Gap</li>
+                    <li><i class="fa-solid fa-check"></i> Bulk Friendly</li>
+                </ul>
+                <button class="btn btn-card" onclick="openModal('signup','merchant')">Join Now</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ PRICING ══════════ -->
+<section id="pricing" class="pricing-section">
+    <div class="container">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title">Rates by <span class="gradient-text">Distance</span></h2>
+        <div class="pricing-tabs">
+            <button class="tab-btn active" onclick="switchTab('scheduled')">Scheduled</button>
+            <button class="tab-btn" onclick="switchTab('instant')">Instant</button>
+            <button class="tab-btn" onclick="switchTab('sameday')">Same Day</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-scheduled">
+            <div class="table-wrap">
+                <table class="pricing-table">
+                    <thead><tr><th>Dist.</th><th>Parcel</th><th>Cake</th></tr></thead>
+                    <tbody>
+                        <tr><td>1-3km</td><td>৳80</td><td>৳150</td></tr>
+                        <tr><td>4-6km</td><td>৳80</td><td>৳150</td></tr>
+                        <tr><td>7-9km</td><td>৳150</td><td>৳200</td></tr>
+                        <tr><td>10-15km</td><td>৳200</td><td>৳250</td></tr>
+                        <tr><td>16-24km</td><td>৳250</td><td>৳300</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-instant">
+            <div class="table-wrap">
+                <table class="pricing-table">
+                    <thead><tr><th>Dist.</th><th>Parcel</th><th>Cake</th></tr></thead>
+                    <tbody>
+                        <tr><td>1-3km</td><td>৳100</td><td>৳160</td></tr>
+                        <tr><td>4-6km</td><td>৳120</td><td>৳170</td></tr>
+                        <tr><td>7-12km</td><td>৳185</td><td>৳230</td></tr>
+                        <tr><td>13-20km</td><td>৳220</td><td>৳260</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-sameday">
+            <div class="table-wrap">
+                <table class="pricing-table">
+                    <thead><tr><th>Plan</th><th>Rate</th></tr></thead>
+                    <tbody>
+                        <tr><td>Flat Rate</td><td>৳120</td></tr>
+                        <tr><td>Extra Weight</td><td>+৳20/kg</td></tr>
+                        <tr><td>Max Parcel</td><td>5 Items</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="extra-charges"><p>Eid/Rain Bonus: <b>+৳20</b> | 3kg+ weight: <b>+৳20/kg</b></p></div>
+    </div>
+</section>
+
+<!-- ══════════ INTERACTIVE MAP & CALCULATOR ══════════ -->
+<section id="coverage" class="map-section">
+    <div class="container">
+        <div class="section-label">Live Coverage</div>
+        <h2 class="section-title">Check Your <span class="gradient-text">Delivery Area</span></h2>
+        
+        <div class="map-calculator-grid">
+            <!-- Left: The Live Map -->
+            <div class="map-container-wrap" data-aos="fade-right">
+                <div id="dhaka-map"></div>
+                <div class="map-overlay-info">
+                    <p><i class="fa-solid fa-mouse-pointer"></i> <b>Click Map Twice:</b> 1st for Pickup, 2nd for Delivery</p>
+                </div>
+            </div>
+
+            <!-- Right: The Advanced Result Ticket -->
+            <div class="calc-card" data-aos="fade-left">
+                <div class="calc-header">
+                    <h3>Delivery Estimator</h3>
+                    <p>Select details for exact pricing</p>
+                </div>
+                
+                <div class="calc-body">
+                    <div class="calc-row">
+                        <div class="calc-group">
+                            <label><i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> Pickup Area</label>
+                            <div class="input-wrap">
+                                <input type="text" id="pickup-search" placeholder="Type area (e.g. Uttara)" oninput="handleInput('pickup')">
+                                <div id="pickup-suggestions" class="suggestions-box"></div>
+                            </div>
+                        </div>
+                        <div class="calc-group">
+                            <label><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> Delivery Area</label>
+                            <div class="input-wrap">
+                                <input type="text" id="delivery-search" placeholder="Type area (e.g. Banani)" oninput="handleInput('delivery')">
+                                <div id="delivery-suggestions" class="suggestions-box"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calc-group">
+                        <label>Calculated Distance</label>
+                        <div class="range-wrap">
+                            <span class="range-val" style="text-align:left;"><b id="main-dist-text">0</b> KM (via fastest road)</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-group">
+                        <label>Service Type</label>
+                        <div class="service-pills">
+                            <button class="pill active" onclick="setService('scheduled', this)">Scheduled</button>
+                            <button class="pill" onclick="setService('instant', this)">Instant</button>
+                            <button class="pill" onclick="setService('sameday', this)">Same Day</button>
+                        </div>
+                    </div>
+
+                    <div class="calc-row">
+                        <div class="calc-group">
+                            <label>Item Type</label>
+                            <select id="main-item" onchange="calculateAdvancedPrice()">
+                                <option value="parcel">Food / Parcel</option>
+                                <option value="cake">Special Cake</option>
+                            </select>
+                        </div>
+                        <div class="calc-group">
+                            <label>Weight (KG)</label>
+                            <input type="number" id="main-weight" value="1" min="1" max="20" oninput="calculateAdvancedPrice()">
+                        </div>
+                    </div>
+
+                    <div class="price-ticket">
+                        <div class="ticket-row"><span>Base Charge</span><span id="base-charge">৳ 80</span></div>
+                        <div class="ticket-row"><span>Weight Surcharge</span><span id="weight-surcharge">৳ 0</span></div>
+                        <div class="ticket-row border-top">
+                            <strong>Total Payable</strong>
+                            <strong class="total-anim" id="main-total">৳ 80</strong>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-xl" style="width:100%; justify-content:center;" onclick="openModal('signup','merchant')">
+                        Book This Delivery <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ PROOF OF TRUST ══════════ -->
+<section class="trust-gallery">
+    <div class="container">
+        <div class="section-label" style="text-align:center;">Proven Record</div>
+        <h2 class="section-title" style="text-align:center;">Delivered with <span class="gradient-text">Care</span></h2>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item" data-aos="zoom-in">
+                <img src="customer.png" alt="Happy Customer Delivery">
+                <div class="gallery-overlay">
+                    <p><i class="fa-solid fa-circle-check"></i> Standard Parcel Delivery</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                <img src="customer2.png" alt="Fragile Item Delivery">
+                <div class="gallery-overlay">
+                    <p><i class="fa-solid fa-circle-check"></i> Handled with Special Care</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<div class="stats-bar-new">
+    <div class="container stats-grid-new">
+        <div class="stat-card-new" data-aos="fade-up">
+            <h3 class="counter" data-target="10000">0</h3>
+            <p>Merchants</p>
+        </div>
+        <div class="stat-card-new" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="counter" data-target="5000">0</h3>
+            <p>Riders</p>
+        </div>
+        <div class="stat-card-new" data-aos="fade-up" data-aos-delay="200">
+            <h3 class="counter" data-target="500000">0</h3>
+            <p>Deliveries</p>
+        </div>
+        <div class="stat-card-new" data-aos="fade-up" data-aos-delay="300">
+            <h3>99%</h3>
+            <p>Success</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ CREATIVE HOW IT WORKS ══════════ -->
+<section id="how-it-works" class="how-section">
+    <div class="container">
+        <div class="section-label" style="text-align:center;">Simple Steps</div>
+        <h2 class="section-title" style="text-align:center;">How <span class="gradient-text">Deliverydei</span> Works</h2>
+        
+        <div class="how-grid">
+            <div class="how-card" data-aos="fade-up">
+                <div class="how-icon-box">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <div class="how-step-badge">1</div>
+                </div>
+                <h3>Order Online</h3>
+                <p>Use our seamless merchant dashboard to book your parcel in under 60 seconds.</p>
+            </div>
+            
+            <div class="how-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="how-icon-box">
+                    <i class="fa-solid fa-motorcycle"></i>
+                    <div class="how-step-badge">2</div>
+                </div>
+                <h3>Fast Pickup</h3>
+                <p>Our nearest verified rider will arrive at your doorstep for a hassle-free pickup.</p>
+            </div>
+            
+            <div class="how-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="how-icon-box">
+                    <i class="fa-solid fa-handshake-simple"></i>
+                    <div class="how-step-badge">3</div>
+                </div>
+                <h3>Safe Delivery</h3>
+                <p>We ensure safe hand-to-hand delivery with a real-time notification to you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ CREATIVE JOIN SECTION ══════════ -->
+<section id="join" class="join-section">
+    <div class="container">
+        <div class="section-label" style="text-align:center;">Join Us</div>
+        <h2 class="section-title" style="text-align:center;">Choose Your <span class="gradient-text">Journey</span></h2>
+        
+        <div class="join-grid">
+            <!-- Merchant Card -->
+            <div class="join-card" data-aos="fade-right">
+                <div class="join-header">
+                    <div class="join-icon-wrap"><i class="fa-solid fa-building-storefront"></i></div>
+                    <h3>Merchants</h3>
+                </div>
+                <p>Powerful tools to help you scale your delivery operations and grow your business.</p>
+                <ul class="join-benefit-list">
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Dedicated Dashboard</b> for easy tracking</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Lowest COD Charges</b> in the market</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Fast Next-Day</b> payment cycle</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>24/7 Priority</b> customer support</li>
+                </ul>
+                <button class="btn btn-primary btn-xl" onclick="openModal('signup','merchant')">
+                    Register as Merchant <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Rider Card -->
+            <div class="join-card" data-aos="fade-left">
+                <div class="join-header">
+                    <div class="join-icon-wrap"><i class="fa-solid fa-person-biking"></i></div>
+                    <h3>Riders</h3>
+                </div>
+                <p>Join the largest fleet of professional riders and start earning big with total flexibility.</p>
+                <ul class="join-benefit-list">
+                    <li><i class="fa-solid fa-circle-check"></i> <b>High Earnings</b> up to ৳35k/month</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Total Freedom</b> to pick your hours</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Daily Payments</b> directly to your wallet</li>
+                    <li><i class="fa-solid fa-circle-check"></i> <b>Professional App</b> with easy navigation</li>
+                </ul>
+                <button class="btn btn-primary btn-xl" onclick="openModal('signup','rider')">
+                    Register as Rider <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+    <div class="container footer-bottom">
+        <img src="logo.png" alt="Logo" style="height:35px; opacity:0.8; margin-bottom:1rem;">
+        <p>© 2026 Deliverydei Ltd. Bangladesh's #1 Delivery Platform.</p>
+    </div>
+</footer>
+
+<!-- ══════════ AUTH MODAL ══════════ -->
+<div id="auth-modal" class="modal-overlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-header-logo"><img src="logo.png" alt="Logo"></div>
+        <h2 id="modal-title">Create Account</h2>
+        <div class="role-toggle">
+            <button class="role-btn active" id="role-merchant" onclick="setRole('merchant')">Merchant</button>
+            <button class="role-btn" id="role-rider" onclick="setRole('rider')">Rider</button>
+        </div>
+        <form onsubmit="handleFormSubmit(event)">
+            <input type="tel" placeholder="Phone Number" class="join-input" required>
+            <input type="password" placeholder="Password" class="join-input" required>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Continue</button>
+        </form>
+    </div>
+</div>
+
+<div id="toast" class="toast"><!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
