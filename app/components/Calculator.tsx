@@ -69,9 +69,9 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
           {/* Left: Map */}
           <div className="map-container-wrap" data-aos="fade-right">
              <MapContainer onDistanceChange={setDistance} />
-             <div className="map-overlay-info">
-                <p><i className="fa-solid fa-mouse-pointer"></i> <b>Click Map Twice:</b> 1st for Pickup, 2nd for Delivery</p>
-             </div>
+              <div className="map-overlay-info">
+                 <p><i className="fa-solid fa-mouse-pointer"></i> <b>Click on map</b> to set Pickup location, then click again for Delivery</p>
+              </div>
           </div>
 
           {/* Right: Ticket */}
@@ -86,13 +86,13 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                 <div className="calc-group">
                   <label><i className="fa-solid fa-circle-dot" style={{color:'#10b981'}}></i> Pickup Area</label>
                   <div className="input-wrap">
-                    <input type="text" id="pickup-search" placeholder="Type area (e.g. Uttara)" />
+                    <span className="area-display" id="pickup-display">Click map or search above</span>
                   </div>
                 </div>
                 <div className="calc-group">
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
                   <div className="input-wrap">
-                    <input type="text" id="delivery-search" placeholder="Type area (e.g. Banani)" />
+                    <span className="area-display" id="delivery-display">Click map or search above</span>
                   </div>
                 </div>
               </div>
