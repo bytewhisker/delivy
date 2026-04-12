@@ -1,0 +1,39 @@
+.frontSection {
+  padding: 120px 0;
+  background: white;
+}
+
+.frontImg {
+  width: 100%;
+  border-radius: 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
+}
+
+.frontPerks {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.frontPerks li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: var(--s);
+}
+
+.frontPerks li i {
+  color: #10b981;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .frontSection {
+    padding: 80px 0;
+  }
+
+  .frontSection > div {
+    grid-template-columns: 1fr !important;
+  }
+}

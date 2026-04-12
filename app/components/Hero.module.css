@@ -1,0 +1,135 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 100px;
+}
+
+.heroText h1 {
+  font-size: 4.5rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.heroBadge {
+  background: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  display: inline-block;
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
+}
+
+.heroSub {
+  font-size: 1.2rem;
+  color: var(--text-m);
+  margin-bottom: 2.5rem;
+}
+
+.heroCTAGroup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.heroTrust {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.trustAvatars {
+  display: flex;
+}
+
+.trustAvatars img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid white;
+  margin-left: -10px;
+}
+
+.trustAvatars img:first-child {
+  margin-left: 0;
+}
+
+.heroVisual {
+  position: relative;
+}
+
+.heroImgWrap {
+  position: relative;
+}
+
+.heroImg {
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+}
+
+.floatCard {
+  position: absolute;
+  background: white;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  z-index: 2;
+  animation: float 3s infinite ease-in-out;
+}
+
+.floatCard i {
+  color: var(--p);
+}
+
+.cardA {
+  top: 0;
+  left: -15%;
+}
+
+.cardB {
+  bottom: 20%;
+  right: -15%;
+  animation-delay: 1s;
+}
+
+.cardC {
+  top: -10%;
+  right: 10%;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .heroText h1 {
+    font-size: 2.5rem;
+  }
+
+  .heroCTAGroup {
+    flex-direction: column;
+  }
+
+  .floatCard {
+    display: none;
+  }
+}

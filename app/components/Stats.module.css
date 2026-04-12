@@ -1,0 +1,57 @@
+.statsBar {
+  background: white;
+  padding: 100px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+  z-index: 5;
+}
+
+.statsGrid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.statCard {
+  flex: 1;
+  position: relative;
+}
+
+.statCard:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: #e2e8f0;
+}
+
+.counter {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--s);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statCard p {
+  color: var(--text-m);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .statCard::after {
+    display: none;
+  }
+}

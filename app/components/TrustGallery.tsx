@@ -1,0 +1,39 @@
+import Image from 'next/image';
+
+export default function TrustGallery() {
+  return (
+    <section className="trust-gallery">
+      <div className="container">
+        <div className="section-label" style={{ textAlign: 'center' }}>Proven Record</div>
+        <h2 className="section-title" style={{ textAlign: 'center' }}>Delivered with <span className="gradient-text">Care</span></h2>
+        
+        <div className="gallery-grid">
+          <div className="gallery-item" data-aos="zoom-in">
+            <Image 
+              src="/images/customer.png" 
+              alt="Happy Customer Delivery" 
+              width={600} 
+              height={500}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div className="gallery-overlay">
+              <p><i className="fa-solid fa-circle-check"></i> Standard Parcel Delivery</p>
+            </div>
+          </div>
+          <div className="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+            <Image 
+              src="/images/customer2.png" 
+              alt="Fragile Item Delivery" 
+              width={600} 
+              height={500}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div className="gallery-overlay">
+              <p><i className="fa-solid fa-circle-check"></i> Handled with Special Care</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
