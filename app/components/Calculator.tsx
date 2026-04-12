@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
-// Dynamically import Leaflet with no SSR
 const MapContainer = dynamic(() => import('./MapComponent'), { 
   ssr: false,
   loading: () => <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>Loading Dhaka Map...</div>
@@ -22,6 +21,16 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const [baseCharge, setBaseCharge] = useState(80);
   const [weightSurcharge, setWeightSurcharge] = useState(0);
   const [total, setTotal] = useState(80);
+
+  const [pickupLocation, setPickupLocation] = useState<string | null>(null);
+  const [deliveryLocation, setDeliveryLocation] = useState<string | null>(null);
+  
+  const [pickupQuery, setPickupQuery] = useState('');
+  const [deliveryQuery, setDeliveryQuery] = useState('');
+  const [pickupResults, setPickupResults] = useState<any[]>([]);
+  const [deliveryResults, setDeliveryResults] = useState<any[]>([]);
+  const [showPickupResults, setShowPickupResults] = useState(false);
+  const [showDeliveryResults, setShowDeliveryResults] = useState(false);
 
   useEffect(() => {
     calculatePrice();
@@ -59,6 +68,63 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
     setTotal(base + surcharge);
   };
 
+  const searchLocations = async (query: string, type: 'pickup' | 'delivery') => {
+    if (query.length < 2) {
+      if (type === 'pickup') setPickupResults([]);
+      else setDeliveryResults([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}%2C%20Dhaka%2C%20Bangladesh&limit=5&countrycodes=bd`
+      );
+      const data = await res.json();
+      if (type === 'pickup') {
+        setPickupResults(data);
+        setShowPickupResults(true);
+      } else {
+        setDeliveryResults(data);
+        setShowDeliveryResults(true);
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+    }
+  };
+
+  const selectLocation = (result: any, type: 'pickup' | 'delivery') => {
+    const name = result.display_name?.split(',')[0] || query;
+    if (type === 'pickup') {
+      setPickupLocation(name);
+      setPickupQuery(name);
+      setShowPickupResults(false);
+      setPickupResults([]);
+    } else {
+      setDeliveryLocation(name);
+      setDeliveryQuery(name);
+      setShowDeliveryResults(false);
+      setDeliveryResults([]);
+    }
+    
+    if (typeof window !== 'undefined' && (window as any).searchLocation) {
+      (window as any).searchLocation(result.display_name?.split(',')[0] || query, type);
+    }
+  };
+
+  const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPickupQuery(val);
+    setPickupLocation(val);
+    searchLocations(val, 'pickup');
+  };
+
+  const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setDeliveryQuery(val);
+    setDeliveryLocation(val);
+    searchLocations(val, 'delivery');
+  };
+
   return (
     <section id="coverage" className="map-section">
       <div className="container">
@@ -66,15 +132,24 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
         <h2 className="section-title">Check Your <span className="gradient-text">Delivery Area</span></h2>
         
         <div className="map-calculator-grid">
-          {/* Left: Map */}
           <div className="map-container-wrap" data-aos="fade-right">
-             <MapContainer onDistanceChange={setDistance} />
-              <div className="map-overlay-info">
-                 <p><i className="fa-solid fa-mouse-pointer"></i> <b>Click on map</b> to set Pickup location, then click again for Delivery</p>
-              </div>
+             <MapContainer 
+               onDistanceChange={setDistance} 
+               onLocationChange={(type, name) => {
+                 if (type === 'pickup') {
+                   setPickupLocation(name);
+                   setPickupQuery(name || '');
+                 } else {
+                   setDeliveryLocation(name);
+                   setDeliveryQuery(name || '');
+                 }
+               }}
+             />
+             <div className="map-overlay-info">
+                <p><i className="fa-solid fa-mouse-pointer"></i> <b>Hover map</b> to enable scroll zoom. <b>Click</b> to set pickup & delivery</p>
+             </div>
           </div>
 
-          {/* Right: Ticket */}
           <div className="calc-card" data-aos="fade-left">
             <div className="calc-header">
               <h3>Delivery Estimator</h3>
@@ -83,17 +158,65 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
             
             <div className="calc-body">
               <div className="calc-row">
-                <div className="calc-group">
+                <div className="calc-group" style={{position: 'relative'}}>
                   <label><i className="fa-solid fa-circle-dot" style={{color:'#10b981'}}></i> Pickup Area</label>
                   <div className="input-wrap">
-                    <span className="area-display" id="pickup-display">Click map or search above</span>
+                    <input 
+                      type="text" 
+                      value={pickupQuery} 
+                      onChange={handlePickupChange}
+                      onFocus={() => setShowPickupResults(true)}
+                      placeholder="Type area (e.g. Uttara)" 
+                    />
+                    {pickupLocation && (
+                      <span 
+                        style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
+                        onClick={() => { setPickupLocation(null); setPickupQuery(''); if ((window as any).removeLocationMarker) (window as any).removeLocationMarker('pickup'); }}
+                      >
+                        <i className="fa-solid fa-times"></i>
+                      </span>
+                    )}
                   </div>
+                  {showPickupResults && pickupResults.length > 0 && (
+                    <div className="search-suggestions">
+                      {pickupResults.map((result, idx) => (
+                        <div key={idx} onClick={() => selectLocation(result, 'pickup')} className="suggestion-item">
+                          <div style={{fontWeight: 500}}>{result.display_name.split(',')[0]}</div>
+                          <div style={{fontSize: '11px', color: '#666'}}>{result.display_name.split(',').slice(1, 3).join(',')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="calc-group">
+                <div className="calc-group" style={{position: 'relative'}}>
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
                   <div className="input-wrap">
-                    <span className="area-display" id="delivery-display">Click map or search above</span>
+                    <input 
+                      type="text" 
+                      value={deliveryQuery} 
+                      onChange={handleDeliveryChange}
+                      onFocus={() => setShowDeliveryResults(true)}
+                      placeholder="Type area (e.g. Banani)" 
+                    />
+                    {deliveryLocation && (
+                      <span 
+                        style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
+                        onClick={() => { setDeliveryLocation(null); setDeliveryQuery(''); if ((window as any).removeLocationMarker) (window as any).removeLocationMarker('delivery'); }}
+                      >
+                        <i className="fa-solid fa-times"></i>
+                      </span>
+                    )}
                   </div>
+                  {showDeliveryResults && deliveryResults.length > 0 && (
+                    <div className="search-suggestions">
+                      {deliveryResults.map((result, idx) => (
+                        <div key={idx} onClick={() => selectLocation(result, 'delivery')} className="suggestion-item">
+                          <div style={{fontWeight: 500}}>{result.display_name.split(',')[0]}</div>
+                          <div style={{fontSize: '11px', color: '#666'}}>{result.display_name.split(',').slice(1, 3).join(',')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
