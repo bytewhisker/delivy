@@ -24,13 +24,15 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
     <header className={scrolled ? 'scrolled' : ''}>
       <nav className="container nav-content">
         <Link href="/" className="logo">
-          <Image 
-            src="/images/logo.png" 
-            alt="Deliverydei Logo" 
-            width={150} 
-            height={40} 
+          <Image
+            src="/images/logo.png"
+            alt="Deliverydei Logo"
+            width={150}
+            height={40}
             priority={true}
-            style={{ width: 'auto', height: '40px' }} 
+            style={{ width: 'auto', height: '40px', userSelect: 'none', pointerEvents: 'none' }}
+            onContextMenu={(e) => e.preventDefault()}
+            draggable={false}
           />
         </Link>
         <div className={`nav-links ${mobileMenuOpen ? 'mobile-active' : ''}`} id="nav-links">

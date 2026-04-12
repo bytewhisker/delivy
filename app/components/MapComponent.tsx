@@ -38,7 +38,7 @@ export default function MapComponent({ onDistanceChange, onLocationChange, picku
 
       // High-detail tile layer showing street names and numbers
       L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: false,
         maxZoom: 19
       }).addTo(mapInstanceRef.current);
 
@@ -158,10 +158,10 @@ export default function MapComponent({ onDistanceChange, onLocationChange, picku
     const pickupLatlng = pickupMarkerRef.current.getLatLng();
     const deliveryLatlng = deliveryMarkerRef.current.getLatLng();
 
-    // Use OSRM for routing
-    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${pickupLatlng.lng},${pickupLatlng.lat};${deliveryLatlng.lng},${deliveryLatlng.lat}?overview=full&geometries=geojson`;
+    // Use local API proxy for OSRM routing
+    const apiUrl = `/api/calculate-route?pickupLng=${pickupLatlng.lng}&pickupLat=${pickupLatlng.lat}&deliveryLng=${deliveryLatlng.lng}&deliveryLat=${deliveryLatlng.lat}`;
 
-    fetch(osrmUrl)
+    fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
         if (data.routes && data.routes[0]) {

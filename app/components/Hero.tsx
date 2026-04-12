@@ -41,12 +41,12 @@ export default function Hero({ onOpenModal }: HeroProps) {
             <span>COD Ready</span>
           </div>
           <div className="hero-img-wrap">
-            <Image 
-              src="/images/maincover.png" 
-              alt="Deliverydei Main Cover" 
-              className="hero-img" 
-              width={600} 
-              height={450} 
+            <Image
+              src="/images/maincover.png"
+              alt="Deliverydei Main Cover"
+              className="hero-img"
+              width={600}
+              height={450}
               priority={true}
               style={{ height: 'auto', width: '100%', borderRadius: '30px' }}
             />

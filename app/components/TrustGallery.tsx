@@ -9,12 +9,14 @@ export default function TrustGallery() {
         
         <div className="gallery-grid">
           <div className="gallery-item" data-aos="zoom-in">
-            <Image 
-              src="/images/customer.png" 
-              alt="Happy Customer Delivery" 
-              width={600} 
+            <Image
+              src="/images/customer.png"
+              alt="Happy Customer Delivery"
+              width={600}
               height={500}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', userSelect: 'none', pointerEvents: 'none' }}
+              onContextMenu={(e) => e.preventDefault()}
+              draggable={false}
             />
             <div className="gallery-overlay">
               <p><i className="fa-solid fa-circle-check"></i> Fresh Food Delivery</p>
@@ -26,7 +28,9 @@ export default function TrustGallery() {
               alt="Safe Cake Delivery"
               width={600}
               height={500}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', userSelect: 'none', pointerEvents: 'none' }}
+              onContextMenu={(e) => e.preventDefault()}
+              draggable={false}
             />
             <div className="gallery-overlay">
               <p><i className="fa-solid fa-circle-check"></i> Cake & Desserts Safe</p>
