@@ -24,10 +24,11 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const [service, setService] = useState<'scheduled' | 'instant' | 'sameday'>('scheduled');
   const [itemType, setItemType] = useState<'parcel' | 'cake'>('parcel');
   const [weight, setWeight] = useState<number>(1);
-  
-  const [baseCharge, setBaseCharge] = useState(80);
+
+  const [baseCharge, setBaseCharge] = useState(0);
   const [weightSurcharge, setWeightSurcharge] = useState(0);
-  const [total, setTotal] = useState(80);
+  const [serviceCharge, setServiceCharge] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const [pickupLocation, setPickupLocation] = useState<string | null>(null);
   const [deliveryLocation, setDeliveryLocation] = useState<string | null>(null);
@@ -123,78 +124,51 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
     let base = 0;
     let surcharge = 0;
 
-    if (service === 'sameday') {
-      base = 120;
-      if (weight > 1) {
-        surcharge = Math.ceil(weight - 1) * 20;
-      }
-    } else if (service === 'instant') {
-      const instantRates = {
-        parcel: [
-          { max: 5, price: 100 },
-          { max: 10, price: 140 },
-          { max: 15, price: 180 },
-          { max: 20, price: 220 },
-          { max: 25, price: 270 },
-          { max: 30, price: 340 },
-          { max: 35, price: 400 },
-          { max: 99, price: 500 }
-        ],
-        cake: [
-          { max: 5, price: 140 },
-          { max: 10, price: 190 },
-          { max: 15, price: 240 },
-          { max: 20, price: 290 },
-          { max: 25, price: 340 },
-          { max: 30, price: 400 },
-          { max: 35, price: 460 },
-          { max: 99, price: 600 }
-        ]
-      };
-      const tier = instantRates[itemType].find(t => distNum <= t.max);
-      base = tier ? tier.price : 500;
-      
-      if (itemType === 'cake') {
-        if (weight > 5) surcharge = Math.ceil(weight - 5) * 25;
-      } else {
-        if (weight > 3) surcharge = Math.ceil(weight - 3) * 20;
-      }
+    // Distance-based pricing tables
+    const parcelRates = [
+      { max: 6, price: 100 },
+      { max: 12, price: 150 },
+      { max: 18, price: 200 },
+      { max: 24, price: 250 },
+      { max: 30, price: 300 },
+      { max: 36, price: 400 },
+      { max: 99, price: 400 }
+    ];
+
+    const cakeRates = [
+      { max: 6, price: 150 },
+      { max: 12, price: 200 },
+      { max: 18, price: 250 },
+      { max: 24, price: 300 },
+      { max: 30, price: 400 },
+      { max: 36, price: 450 },
+      { max: 99, price: 450 }
+    ];
+
+    // Find the correct price tier based on distance
+    const rates = itemType === 'cake' ? cakeRates : parcelRates;
+    const tier = rates.find(t => distNum <= t.max);
+    base = tier ? tier.price : (itemType === 'cake' ? 450 : 400);
+
+    // Weight surcharge
+    if (itemType === 'cake') {
+      if (weight > 5) surcharge = Math.ceil(weight - 5) * 25;
     } else {
-      const scheduledRates = {
-        parcel: [
-          { max: 5, price: 80 },
-          { max: 10, price: 120 },
-          { max: 15, price: 160 },
-          { max: 20, price: 200 },
-          { max: 25, price: 250 },
-          { max: 30, price: 320 },
-          { max: 35, price: 380 },
-          { max: 99, price: 500 }
-        ],
-        cake: [
-          { max: 5, price: 120 },
-          { max: 10, price: 170 },
-          { max: 15, price: 220 },
-          { max: 20, price: 270 },
-          { max: 25, price: 320 },
-          { max: 30, price: 380 },
-          { max: 35, price: 440 },
-          { max: 99, price: 600 }
-        ]
-      };
-      const tier = scheduledRates[itemType].find(t => distNum <= t.max);
-      base = tier ? tier.price : 500;
-      
-      if (itemType === 'cake') {
-        if (weight > 5) surcharge = Math.ceil(weight - 5) * 25;
-      } else {
-        if (weight > 3) surcharge = Math.ceil(weight - 3) * 20;
-      }
+      if (weight > 3) surcharge = Math.ceil(weight - 3) * 20;
+    }
+
+    // Service type modifier
+    let serviceModifier = 0;
+    if (service === 'instant') {
+      serviceModifier = 20;
+    } else if (service === 'sameday') {
+      serviceModifier = 15;
     }
 
     setBaseCharge(base);
     setWeightSurcharge(surcharge);
-    setTotal(base + surcharge);
+    setServiceCharge(serviceModifier);
+    setTotal(base + surcharge + serviceModifier);
   };
 
   const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -391,15 +365,6 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                 </div>
               </div>
 
-              <div className="calc-group">
-                <label>Service Type</label>
-                <div className="service-pills">
-                  <button className={`pill ${service === 'scheduled' ? 'active' : ''}`} onClick={() => setService('scheduled')}>Scheduled</button>
-                  <button className={`pill ${service === 'instant' ? 'active' : ''}`} onClick={() => setService('instant')}>Instant</button>
-                  <button className={`pill ${service === 'sameday' ? 'active' : ''}`} onClick={() => setService('sameday')}>Same Day</button>
-                </div>
-              </div>
-
               <div className="calc-row">
                 <div className="calc-group">
                   <label>Item Type</label>
@@ -414,13 +379,32 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                 </div>
               </div>
 
-              <div className="price-ticket">
-                <div className="ticket-row"><span>Base Charge</span><span>৳ {baseCharge}</span></div>
-                <div className="ticket-row"><span>Weight Surcharge</span><span>৳ {weightSurcharge}</span></div>
-                <div className="ticket-row border-top">
-                  <strong>Total Payable</strong>
-                  <strong className="total-anim">৳ {total}</strong>
+              <div className="calc-group">
+                <label>Delivery Speed</label>
+                <div className="service-pills">
+                  <button className={`pill ${service === 'scheduled' ? 'active' : ''}`} onClick={() => setService('scheduled')}>Scheduled</button>
+                  <button className={`pill ${service === 'instant' ? 'active' : ''}`} onClick={() => setService('instant')}>Instant</button>
+                  <button className={`pill ${service === 'sameday' ? 'active' : ''}`} onClick={() => setService('sameday')}>Same Day</button>
                 </div>
+              </div>
+
+              <div className="price-ticket">
+                {baseCharge > 0 && (
+                  <>
+                    <div className="ticket-row"><span>Delivery Charge</span><span>৳ {baseCharge}</span></div>
+                    {weightSurcharge > 0 && <div className="ticket-row"><span>Weight Extra</span><span>৳ {weightSurcharge}</span></div>}
+                    {serviceCharge > 0 && <div className="ticket-row"><span>{service === 'instant' ? 'Instant +' : 'Same Day +'}</span><span>৳ {serviceCharge}</span></div>}
+                    <div className="ticket-row border-top">
+                      <strong>Total Delivery Charge</strong>
+                      <strong className="total-anim">৳ {total}</strong>
+                    </div>
+                  </>
+                )}
+                {baseCharge === 0 && (
+                  <div className="ticket-row" style={{textAlign: 'center', color: '#999', padding: '1rem'}}>
+                    <em>Select location on map to see delivery charge</em>
+                  </div>
+                )}
               </div>
               
               <button
