@@ -121,41 +121,6 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
     setTotal(base + surcharge);
   };
 
-  const searchLocations = async (query: string, type: 'pickup' | 'delivery') => {
-    if (query.length < 1) {
-      if (type === 'pickup') setPickupResults([]);
-      else setDeliveryResults([]);
-      return;
-    }
-
-    try {
-      const searchQuery = query.includes('Dhaka') ? query : `${query}, Dhaka, Bangladesh`;
-      const res = await fetch(
-        `https://photon.komoot.io/api/?q=${encodeURIComponent(searchQuery)}&limit=8&lang=en`
-      );
-      const data = await res.json();
-      const results = data.features?.map((f: any) => ({
-        display_name: f.properties.name || f.properties.city || query,
-        name: f.properties.name,
-        city: f.properties.city,
-        lat: f.geometry.coordinates[1],
-        lon: f.geometry.coordinates[0]
-      })) || [];
-      
-      if (type === 'pickup') {
-        setPickupResults(results);
-        setShowPickupResults(true);
-      } else {
-        setDeliveryResults(results);
-        setShowDeliveryResults(true);
-      }
-    } catch (err) {
-      console.error('Search error:', err);
-      if (type === 'pickup') setPickupResults([]);
-      else setDeliveryResults([]);
-    }
-  };
-
   const selectLocation = (result: any, type: 'pickup' | 'delivery') => {
     const name = result.name;
     if (type === 'pickup') {
