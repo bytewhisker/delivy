@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function DhakaLocationPage() {
   return (
     <>
-      <Header onOpenModal={() => {}} />
+      <Header />
       <main className="container" style={{ paddingTop: '120px' }}>
         <Breadcrumbs items={[{ name: 'Locations', item: '/locations' }, { name: 'Dhaka', item: '/locations/dhaka' }]} />
         

@@ -26,7 +26,7 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <Header onOpenModal={() => {}} />
+      <Header />
       <main className="container" style={{ paddingTop: '120px' }}>
         <Breadcrumbs items={[{ name: 'Support', item: '/support' }, { name: 'FAQ', item: '/faq' }]} />
         

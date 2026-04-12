@@ -25,7 +25,7 @@ export default function CakeDeliveryPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
-      <Header onOpenModal={() => {}} />
+      <Header />
       <main className="container" style={{ paddingTop: '120px' }}>
         <Breadcrumbs items={[{ name: 'Services', item: '/services' }, { name: 'Cake Delivery', item: '/services/cake-delivery' }]} />
         

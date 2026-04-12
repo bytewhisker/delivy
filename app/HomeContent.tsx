@@ -7,7 +7,6 @@ import PageLoader from './components/PageLoader';
 import AuthModal from './components/AuthModal';
 import Toast from './components/Toast';
 import FrontSection from './components/FrontSection';
-import Services from './components/Services';
 import Pricing from './components/Pricing';
 import Calculator from './components/Calculator';
 import Stats from './components/Stats';

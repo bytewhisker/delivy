@@ -3,6 +3,7 @@ import './styles/globals.css';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://deliverydei.com'),
   title: 'Deliverydei | Bangladesh\'s Fastest Delivery Platform',
   description: 'Join Deliverydei as a Merchant or Rider. Instant, Scheduled & Same-Day delivery for parcels, food, and cakes across Bangladesh.',
 };

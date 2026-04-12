@@ -1,12 +1,14 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 interface HeaderProps {
-  onOpenModal: (mode: 'login' | 'signup', role?: 'merchant' | 'rider') => void;
+  onOpenModal?: (mode: 'login' | 'signup', role?: 'merchant' | 'rider') => void;
 }
 
-export default function Header({ onOpenModal }: HeaderProps) {
+export default function Header({ onOpenModal }: HeaderProps = {}) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,8 +41,8 @@ export default function Header({ onOpenModal }: HeaderProps) {
           <Link href="/about-us" className="nav-link" onClick={() => setMobileMenuOpen(false)}>About</Link>
         </div>
         <div className="nav-actions">
-          <button className="btn btn-ghost" onClick={() => onOpenModal('login')}>Login</button>
-          <button className="btn btn-primary" onClick={() => onOpenModal('signup', 'merchant')}>Get Started</button>
+          <button className="btn btn-ghost" onClick={() => onOpenModal?.('login')}>Login</button>
+          <button className="btn btn-primary" onClick={() => onOpenModal?.('signup', 'merchant')}>Get Started</button>
           <button className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <span></span><span></span><span></span>
           </button>

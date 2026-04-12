@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+
 
 export const SEO_CONFIG = {
   siteName: 'DeliveryDei',
