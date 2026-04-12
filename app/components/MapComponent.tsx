@@ -246,18 +246,18 @@ export default function MapComponent({ onDistanceChange, onLocationChange }: Map
     };
   }, []);
 
-  const handleSearchSelect = useCallback(async (query: string, type: 'pickup' | 'delivery') => {
+  const handleSearchSelect = useCallback(async (query: string, type: 'pickup' | 'delivery', providedCoords?: { lat: number; lng: number }) => {
     if (!mapRef.current || !query) return;
 
     const normalizedQuery = query.trim();
-    const coords = DHAKA_AREA_COORDS[normalizedQuery];
+    let coords = providedCoords || DHAKA_AREA_COORDS[normalizedQuery];
     
     if (!coords) {
       console.log('Area not found in coords:', normalizedQuery);
       return;
     }
 
-    const latlng = { lat: coords[0], lng: coords[1] };
+    const latlng = { lat: coords.lat || coords[0], lng: coords.lng || coords[1] };
     
     if (markersRef.current[type]) {
       mapRef.current.removeLayer(markersRef.current[type]!.marker);

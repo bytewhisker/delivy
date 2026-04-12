@@ -8,28 +8,15 @@ const MapContainer = dynamic(() => import('./MapComponent'), {
   loading: () => <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>Loading Dhaka Map...</div>
 });
 
-const DHAKA_AREAS = [
-  'Uttara', 'Uttara Model Town', 'Uttara Sector 1-10', 'Uttara Sector 11-13',
-  'Banani', 'Banani Model Town', 'Gulshan', 'Gulshan 2', 'Gulshan 1',
-  'Dhanmondi', 'Dhanmondi 27', 'Dhanmondi 15', 'Dhanmondi 32',
-  'Mirpur', 'Mirpur 1', 'Mirpur 2', 'Mirpur 6', 'Mirpur 10', 'Mirpur 11', 'Mirpur 12',
-  'Mohammadpur', 'Mohammadpur Bazar', 'Beribadh', 'Kamalpur',
-  'Baridhara', 'Baridhara DOHS', 'Bashundhara', 'Bashundhara R/A',
-  'Niketon', 'Gulshan Baridhara', 'Merul Badda', 'Badda', 'Badda DNCC',
-  'Paltan', 'Motivejheel', 'Kotwali', 'Lalbagh', 'Kamarchar', 'Wari',
-  'Agargaon', 'Sher-e-Bangla Nagar', 'Panchaboti', 'Farmgate',
-  'Tejgaon', 'Tejgaon I/A', 'Khilgaon', 'Malibagh', 'Mugda', 'Shantinagar',
-  'Shahbagh', 'Kadamtala', 'Islampur', 'Sutrapur', 'Jatrabari',
-  'Demra', 'Demra Colony', 'Sarulia', 'Narayanganj', 'Siddirganj',
-  'Savar', 'Savar Bazar', 'Zirabo', 'Ashulia', 'Gazipur',
-  'Keraniganj', 'Konda', 'Kaliakoir', 'Tongi', 'Gazipur Sadar',
-  'Cantonment', 'Mohanagar', 'Rampura', 'Bawni', 'Kuril', 'Khilkhet',
-  'Jahangir Nagar', 'Bhasantek', 'Azampur', 'Uttarkhan', 'Dakshinkhan',
-  'Shonir Akhra', 'Nayabazar', 'Chowkbazar', 'Dhamrai', 'Manikganj'
-];
-
 interface CalculatorProps {
   onOpenModal: (mode: 'login' | 'signup', role?: 'merchant' | 'rider') => void;
+}
+
+declare global {
+  interface Window {
+    google: any;
+    initAutocomplete: () => void;
+  }
 }
 
 export default function Calculator({ onOpenModal }: CalculatorProps) {
@@ -54,6 +41,8 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
 
   const pickupInputRef = useRef<HTMLInputElement>(null);
   const deliveryInputRef = useRef<HTMLInputElement>(null);
+  const pickupAutocompleteRef = useRef<any>(null);
+  const deliveryAutocompleteRef = useRef<any>(null);
 
   useEffect(() => {
     calculatePrice();
@@ -72,32 +61,64 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const dhakaAreasMemo = useMemo(() => DHAKA_AREAS, []);
+  useEffect(() => {
+    const initAutocomplete = () => {
+      if (typeof window === 'undefined' || !window.google) {
+        setTimeout(initAutocomplete, 500);
+        return;
+      }
 
-  const searchLocations = (query: string, type: 'pickup' | 'delivery') => {
-    let results: any[] = [];
-    
-    if (!query.trim()) {
-      results = dhakaAreasMemo.slice(0, 6).map(a => ({ name: a, type: 'preset' }));
-    } else {
-      const q = query.toLowerCase();
-      results = dhakaAreasMemo
-        .filter(area => {
-          const searchWords = q.split(' ').filter(w => w.length > 0);
-          return searchWords.every(w => area.toLowerCase().includes(w));
-        })
-        .slice(0, 8)
-        .map(a => ({ name: a, type: 'preset' }));
-    }
-    
-    if (type === 'pickup') {
-      setPickupResults(results);
-      setShowPickupResults(true);
-    } else {
-      setDeliveryResults(results);
-      setShowDeliveryResults(true);
-    }
-  };
+      if (pickupInputRef.current && !pickupAutocompleteRef.current) {
+        pickupAutocompleteRef.current = new window.google.maps.places.Autocomplete(pickupInputRef.current, {
+          types: ['establishment', 'neighborhood', 'sublocality'],
+          componentRestrictions: { country: 'bd' },
+          fields: ['name', 'geometry', 'formatted_address']
+        });
+
+        pickupAutocompleteRef.current.addListener('place_changed', () => {
+          const place = pickupAutocompleteRef.current.getPlace();
+          if (place && place.geometry) {
+            const name = place.name || place.formatted_address?.split(',')[0] || 'Pickup';
+            setPickupLocation(name);
+            setPickupQuery(name);
+            
+            if (typeof window !== 'undefined' && (window as any).searchLocation) {
+              (window as any).searchLocation(name, 'pickup', {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+              });
+            }
+          }
+        });
+      }
+
+      if (deliveryInputRef.current && !deliveryAutocompleteRef.current) {
+        deliveryAutocompleteRef.current = new window.google.maps.places.Autocomplete(deliveryInputRef.current, {
+          types: ['establishment', 'neighborhood', 'sublocality'],
+          componentRestrictions: { country: 'bd' },
+          fields: ['name', 'geometry', 'formatted_address']
+        });
+
+        deliveryAutocompleteRef.current.addListener('place_changed', () => {
+          const place = deliveryAutocompleteRef.current.getPlace();
+          if (place && place.geometry) {
+            const name = place.name || place.formatted_address?.split(',')[0] || 'Delivery';
+            setDeliveryLocation(name);
+            setDeliveryQuery(name);
+            
+            if (typeof window !== 'undefined' && (window as any).searchLocation) {
+              (window as any).searchLocation(name, 'delivery', {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+              });
+            }
+          }
+        });
+      }
+    };
+
+    initAutocomplete();
+  }, []);
 
   const calculatePrice = () => {
     const distNum = typeof distance === 'string' ? 0 : distance;
@@ -178,37 +199,16 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
     setTotal(base + surcharge);
   };
 
-  const selectLocation = (result: any, type: 'pickup' | 'delivery') => {
-    const name = result.name;
-    if (type === 'pickup') {
-      setPickupLocation(name);
-      setPickupQuery(name);
-      setShowPickupResults(false);
-      setPickupResults([]);
-    } else {
-      setDeliveryLocation(name);
-      setDeliveryQuery(name);
-      setShowDeliveryResults(false);
-      setDeliveryResults([]);
-    }
-    
-    if (typeof window !== 'undefined' && (window as any).searchLocation) {
-      (window as any).searchLocation(name, type);
-    }
-  };
-
   const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setPickupQuery(val);
     setPickupLocation(val);
-    searchLocations(val, 'pickup');
   };
 
   const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setDeliveryQuery(val);
     setDeliveryLocation(val);
-    searchLocations(val, 'delivery');
   };
 
   return (
@@ -249,10 +249,11 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                   <div className="input-wrap">
                     <input 
                       type="text" 
+                      ref={pickupInputRef}
                       value={pickupQuery} 
                       onChange={handlePickupChange}
-                      onFocus={() => setShowPickupResults(true)}
-                      placeholder="Type area (e.g. Uttara)" 
+                      onFocus={() => setShowPickupResults(false)}
+                      placeholder="Search pickup location..." 
                     />
                     {pickupLocation && (
                       <span 
@@ -263,28 +264,17 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                       </span>
                     )}
                   </div>
-                  {showPickupResults && pickupResults.length > 0 && (
-                    <div className="search-suggestions">
-                      {pickupResults.map((result, idx) => (
-                        <div key={idx} onClick={() => selectLocation(result, 'pickup')} className="suggestion-item">
-                          <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
-                            <i className="fa-solid fa-location-dot" style={{color: '#10b981', fontSize: '12px'}}></i>
-                            {result.name}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
                 <div className="calc-group" style={{position: 'relative'}} ref={deliveryInputRef}>
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
                   <div className="input-wrap">
                     <input 
                       type="text" 
+                      ref={deliveryInputRef}
                       value={deliveryQuery} 
                       onChange={handleDeliveryChange}
-                      onFocus={() => setShowDeliveryResults(true)}
-                      placeholder="Type area (e.g. Banani)" 
+                      onFocus={() => setShowDeliveryResults(false)}
+                      placeholder="Search delivery location..." 
                     />
                     {deliveryLocation && (
                       <span 
@@ -295,18 +285,6 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                       </span>
                     )}
                   </div>
-                  {showDeliveryResults && deliveryResults.length > 0 && (
-                    <div className="search-suggestions">
-                      {deliveryResults.map((result, idx) => (
-                        <div key={idx} onClick={() => selectLocation(result, 'delivery')} className="suggestion-item">
-                          <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
-                            <i className="fa-solid fa-location-dot" style={{color: '#ef4444', fontSize: '12px'}}></i>
-                            {result.name}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
 
