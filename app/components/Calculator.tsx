@@ -1,12 +1,22 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
 const MapContainer = dynamic(() => import('./MapComponent'), { 
   ssr: false,
   loading: () => <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>Loading Dhaka Map...</div>
 });
+
+const DHAKA_AREAS = [
+  'Uttara', 'Banani', 'Gulshan', 'Dhanmondi', 'Mirpur', 'Mohammadpur',
+  'Baridhara', 'Bashundhara', 'Niketon', 'Gulshan 2', 'Uttara Sector 1-10',
+  'Paltan', 'Motijheel', 'Agargaon', 'Badda', 'Mohanagar', 'Jatrabari',
+  'Demra', 'Narayanganj', 'Savar', 'Keraniganj', 'Kamrangirchar',
+  'Shahbagh', 'Lalbagh', 'Wari', 'Sutrapur', 'Kotwali', 'Cantonment',
+  'Panchaboti', 'Farmgate', 'Tejgaon', 'Khilgaon', 'Malibagh', 'Mugda',
+  'Shantinagar', 'Islampur', 'Kamalpur', 'Korail', 'Beribadh'
+];
 
 interface CalculatorProps {
   onOpenModal: (mode: 'login' | 'signup', role?: 'merchant' | 'rider') => void;
@@ -32,9 +42,52 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const [showPickupResults, setShowPickupResults] = useState(false);
   const [showDeliveryResults, setShowDeliveryResults] = useState(false);
 
+  const pickupInputRef = useRef<HTMLInputElement>(null);
+  const deliveryInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     calculatePrice();
   }, [distance, service, itemType, weight]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (pickupInputRef.current && !pickupInputRef.current.contains(e.target as Node)) {
+        setShowPickupResults(false);
+      }
+      if (deliveryInputRef.current && !deliveryInputRef.current.contains(e.target as Node)) {
+        setShowDeliveryResults(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const dhakaAreasMemo = useMemo(() => DHAKA_AREAS, []);
+
+  const searchLocations = (query: string, type: 'pickup' | 'delivery') => {
+    let results: any[] = [];
+    
+    if (!query.trim()) {
+      results = dhakaAreasMemo.slice(0, 6).map(a => ({ name: a, type: 'preset' }));
+    } else {
+      const q = query.toLowerCase();
+      results = dhakaAreasMemo
+        .filter(area => {
+          const searchWords = q.split(' ').filter(w => w.length > 0);
+          return searchWords.every(w => area.toLowerCase().includes(w));
+        })
+        .slice(0, 8)
+        .map(a => ({ name: a, type: 'preset' }));
+    }
+    
+    if (type === 'pickup') {
+      setPickupResults(results);
+      setShowPickupResults(true);
+    } else {
+      setDeliveryResults(results);
+      setShowDeliveryResults(true);
+    }
+  };
 
   const calculatePrice = () => {
     const distNum = typeof distance === 'string' ? 0 : distance;
@@ -104,21 +157,21 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   };
 
   const selectLocation = (result: any, type: 'pickup' | 'delivery') => {
-    const displayName = result.city ? `${result.name}, ${result.city}` : (result.name || result.display_name);
+    const name = result.name;
     if (type === 'pickup') {
-      setPickupLocation(displayName);
-      setPickupQuery(displayName);
+      setPickupLocation(name);
+      setPickupQuery(name);
       setShowPickupResults(false);
       setPickupResults([]);
     } else {
-      setDeliveryLocation(displayName);
-      setDeliveryQuery(displayName);
+      setDeliveryLocation(name);
+      setDeliveryQuery(name);
       setShowDeliveryResults(false);
       setDeliveryResults([]);
     }
     
     if (typeof window !== 'undefined' && (window as any).searchLocation) {
-      (window as any).searchLocation(displayName, type);
+      (window as any).searchLocation(name, type);
     }
   };
 
@@ -169,7 +222,7 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
             
             <div className="calc-body">
               <div className="calc-row">
-                <div className="calc-group" style={{position: 'relative'}}>
+                <div className="calc-group" style={{position: 'relative'}} ref={pickupInputRef}>
                   <label><i className="fa-solid fa-circle-dot" style={{color:'#10b981'}}></i> Pickup Area</label>
                   <div className="input-wrap">
                     <input 
@@ -194,15 +247,14 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                         <div key={idx} onClick={() => selectLocation(result, 'pickup')} className="suggestion-item">
                           <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
                             <i className="fa-solid fa-location-dot" style={{color: '#10b981', fontSize: '12px'}}></i>
-                            {result.name || result.display_name}
+                            {result.name}
                           </div>
-                          {result.city && <div style={{fontSize: '11px', color: '#666', marginLeft: '20px'}}>{result.city}</div>}
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
-                <div className="calc-group" style={{position: 'relative'}}>
+                <div className="calc-group" style={{position: 'relative'}} ref={deliveryInputRef}>
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
                   <div className="input-wrap">
                     <input 
@@ -227,9 +279,8 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                         <div key={idx} onClick={() => selectLocation(result, 'delivery')} className="suggestion-item">
                           <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
                             <i className="fa-solid fa-location-dot" style={{color: '#ef4444', fontSize: '12px'}}></i>
-                            {result.name || result.display_name}
+                            {result.name}
                           </div>
-                          {result.city && <div style={{fontSize: '11px', color: '#666', marginLeft: '20px'}}>{result.city}</div>}
                         </div>
                       ))}
                     </div>
