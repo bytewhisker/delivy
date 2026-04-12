@@ -15,6 +15,14 @@ export const metadata: Metadata = {
       }
     ],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black',
+  },
+  other: {
+    'copyright': '© 2026 DeliveryDei Ltd. All rights reserved.',
+    'author': 'DeliveryDei Ltd.',
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +45,27 @@ export default function RootLayout({
         {children}
         <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" strategy="afterInteractive" />
         <Script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js" strategy="afterInteractive" />
+
+        {/* Code & Design Protection */}
+        <Script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Disable right-click on production
+              if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+                document.addEventListener('contextmenu', (e) => {
+                  e.preventDefault();
+                });
+
+                // Disable DevTools keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+                    e.preventDefault();
+                  }
+                });
+              }
+            `
+          }}
+        />
       </body>
     </html>
   );

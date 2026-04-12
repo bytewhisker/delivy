@@ -60,7 +60,7 @@ export default function Footer() {
 
         <div className="footer-bottom-bar">
           <div className="copyright">
-            © 2026 <strong>Deliverydei Ltd.</strong> All rights reserved.
+            © 2026 <strong>Deliverydei Ltd.</strong> All rights reserved. | Code & Design Protected | Unauthorized copying prohibited.
           </div>
           <div className="footer-badges">
             <span className="location-badge"><i className="fa-solid fa-location-dot"></i> Dhaka, Bangladesh</span>

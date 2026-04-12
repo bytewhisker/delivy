@@ -11,7 +11,7 @@ export default function Hero({ onOpenModal }: HeroProps) {
     <section className="hero" id="home">
       <div className="container hero-content">
         <div className="hero-text" data-aos="fade-right">
-          <div className="hero-badge">🚀 Support Local Businesses</div>
+          <div className="hero-badge">Support Local Businesses</div>
           <h1><span className="gradient-text">Fast Food, Cake</span><br />& Parcel Delivery</h1>
           <p className="hero-sub" style={{ fontSize: 'clamp(1rem, 4vw, 1.2rem)' }}>DeliveryDei – The reliable delivery partner for local businesses in Bangladesh. No FoodPanda, No Commission Cuts. Just Fast, Safe, Affordable Delivery.</p>
           <div className="hero-cta-group">

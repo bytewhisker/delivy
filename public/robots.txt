@@ -1,0 +1,19 @@
+User-agent: *
+Disallow: /api/
+Disallow: /.next/
+Disallow: /node_modules/
+Allow: /
+
+# Prevent copying/scraping
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# DeliveryDei Code & Design Protection
+# Unauthorized copying or scraping is prohibited
+# For licensing inquiries: info@deliverydei.com
