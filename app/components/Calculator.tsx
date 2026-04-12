@@ -20,7 +20,7 @@ declare global {
 }
 
 export default function Calculator({ onOpenModal }: CalculatorProps) {
-  const [distance, setDistance] = useState<number | string>(0);
+  const [distance, setDistance] = useState<number>(0);
   const [service, setService] = useState<'scheduled' | 'instant' | 'sameday'>('scheduled');
   const [itemType, setItemType] = useState<'parcel' | 'cake'>('parcel');
   const [weight, setWeight] = useState<number>(1);
@@ -39,8 +39,6 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
 
   const pickupInputRef = useRef<HTMLInputElement>(null);
   const deliveryInputRef = useRef<HTMLInputElement>(null);
-  const pickupAutocompleteRef = useRef<any>(null);
-  const deliveryAutocompleteRef = useRef<any>(null);
   const pickupContainerRef = useRef<HTMLDivElement>(null);
   const deliveryContainerRef = useRef<HTMLDivElement>(null);
 
@@ -49,65 +47,76 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   }, [distance, service, itemType, weight]);
 
   useEffect(() => {
-    const handleClickOutside = () => {
-      // Handle click outside for autocomplete dropdowns if needed
+    const handleClickOutside = (e: MouseEvent) => {
+      // Close pickup suggestions if click is outside pickup container
+      if (pickupContainerRef.current && !pickupContainerRef.current.contains(e.target as Node)) {
+        setShowPickupSuggestions(false);
+      }
+      // Close delivery suggestions if click is outside delivery container
+      if (deliveryContainerRef.current && !deliveryContainerRef.current.contains(e.target as Node)) {
+        setShowDeliverySuggestions(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const initAutocomplete = () => {
-      if (typeof window === 'undefined' || !window.google) {
-        setTimeout(initAutocomplete, 500);
-        return;
+  const [pickupSuggestions, setPickupSuggestions] = useState<any[]>([]);
+  const [deliverySuggestions, setDeliverySuggestions] = useState<any[]>([]);
+  const [showPickupSuggestions, setShowPickupSuggestions] = useState(false);
+  const [showDeliverySuggestions, setShowDeliverySuggestions] = useState(false);
+
+
+  // Search locations using Nominatim (OpenStreetMap)
+  const searchLocation = async (query: string, type: 'pickup' | 'delivery') => {
+    if (query.length < 2) {
+      if (type === 'pickup') {
+        setPickupSuggestions([]);
+        setShowPickupSuggestions(false);
+      } else {
+        setDeliverySuggestions([]);
+        setShowDeliverySuggestions(false);
       }
+      return;
+    }
 
-      if (pickupInputRef.current && !pickupAutocompleteRef.current) {
-        pickupAutocompleteRef.current = new window.google.maps.places.Autocomplete(pickupInputRef.current, {
-          types: ['establishment', 'neighborhood', 'sublocality'],
-          componentRestrictions: { country: 'bd' },
-          fields: ['name', 'geometry', 'formatted_address']
-        });
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)},Dhaka,Bangladesh&format=json&limit=5`
+      );
+      const results = await response.json();
 
-        pickupAutocompleteRef.current.addListener('place_changed', () => {
-          const place = pickupAutocompleteRef.current.getPlace();
-          if (place && place.geometry) {
-            const name = place.name || place.formatted_address?.split(',')[0] || 'Pickup';
-            setPickupLocation(name);
-            setPickupQuery(name);
-            setPickupCoords({
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
-            });
-          }
-        });
+      if (type === 'pickup') {
+        setPickupSuggestions(results);
+        setShowPickupSuggestions(results.length > 0);
+      } else {
+        setDeliverySuggestions(results);
+        setShowDeliverySuggestions(results.length > 0);
       }
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  };
 
-      if (deliveryInputRef.current && !deliveryAutocompleteRef.current) {
-        deliveryAutocompleteRef.current = new window.google.maps.places.Autocomplete(deliveryInputRef.current, {
-          types: ['establishment', 'neighborhood', 'sublocality'],
-          componentRestrictions: { country: 'bd' },
-          fields: ['name', 'geometry', 'formatted_address']
-        });
-
-        deliveryAutocompleteRef.current.addListener('place_changed', () => {
-          const place = deliveryAutocompleteRef.current.getPlace();
-          if (place && place.geometry) {
-            const name = place.name || place.formatted_address?.split(',')[0] || 'Delivery';
-            setDeliveryLocation(name);
-            setDeliveryQuery(name);
-            setDeliveryCoords({
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
-            });
-          }
-        });
-      }
+  const selectSuggestion = (suggestion: any, type: 'pickup' | 'delivery') => {
+    const name = suggestion.display_name?.split(',')[0] || suggestion.name || 'Location';
+    const coords = {
+      lat: parseFloat(suggestion.lat),
+      lng: parseFloat(suggestion.lon)
     };
 
-    initAutocomplete();
-  }, []);
+    if (type === 'pickup') {
+      setPickupLocation(name);
+      setPickupQuery(name);
+      setPickupCoords(coords);
+      setShowPickupSuggestions(false);
+    } else {
+      setDeliveryLocation(name);
+      setDeliveryQuery(name);
+      setDeliveryCoords(coords);
+      setShowDeliverySuggestions(false);
+    }
+  };
 
   const calculatePrice = () => {
     const distNum = typeof distance === 'string' ? 0 : distance;
@@ -191,45 +200,26 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setPickupQuery(val);
+    searchLocation(val, 'pickup');
   };
 
   const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setDeliveryQuery(val);
+    searchLocation(val, 'delivery');
   };
 
   const handlePickupKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && pickupQuery.trim()) {
+    if (e.key === 'Enter' && pickupSuggestions.length > 0) {
       e.preventDefault();
-      // Geocode the entered location
-      const geocoder = new (window as any).google.maps.Geocoder();
-      geocoder.geocode({ address: pickupQuery + ', Dhaka, Bangladesh' }, (results: any[], status: string) => {
-        if (status === 'OK' && results[0]) {
-          const location = results[0];
-          setPickupLocation(location.formatted_address);
-          setPickupCoords({
-            lat: location.geometry.location.lat(),
-            lng: location.geometry.location.lng()
-          });
-        }
-      });
+      selectSuggestion(pickupSuggestions[0], 'pickup');
     }
   };
 
   const handleDeliveryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && deliveryQuery.trim()) {
+    if (e.key === 'Enter' && deliverySuggestions.length > 0) {
       e.preventDefault();
-      const geocoder = new (window as any).google.maps.Geocoder();
-      geocoder.geocode({ address: deliveryQuery + ', Dhaka, Bangladesh' }, (results: any[], status: string) => {
-        if (status === 'OK' && results[0]) {
-          const location = results[0];
-          setDeliveryLocation(location.formatted_address);
-          setDeliveryCoords({
-            lat: location.geometry.location.lat(),
-            lng: location.geometry.location.lng()
-          });
-        }
-      });
+      selectSuggestion(deliverySuggestions[0], 'delivery');
     }
   };
 
@@ -245,8 +235,6 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                onDistanceChange={setDistance}
                pickupCoords={pickupCoords || undefined}
                deliveryCoords={deliveryCoords || undefined}
-               pickupName={pickupLocation || undefined}
-               deliveryName={deliveryLocation || undefined}
                onLocationChange={(type, name) => {
                  if (type === 'pickup') {
                    setPickupLocation(name);
@@ -258,7 +246,7 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                }}
              />
              <div className="map-overlay-info">
-                <p><i className="fa-solid fa-mouse-pointer"></i> <b>Hover map</b> to enable scroll zoom. <b>Click</b> to set pickup & delivery</p>
+                <p><i className="fa-solid fa-hand-pointer"></i> <b>Tap</b> to set pickup & delivery locations</p>
              </div>
           </div>
 
@@ -272,15 +260,52 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
               <div className="calc-row">
                 <div className="calc-group" style={{position: 'relative'}} ref={pickupContainerRef}>
                   <label><i className="fa-solid fa-circle-dot" style={{color:'#10b981'}}></i> Pickup Area</label>
-                  <div className="input-wrap">
+                  <div className="input-wrap" style={{ position: 'relative' }}>
                     <input
                       type="text"
                       ref={pickupInputRef}
                       value={pickupQuery}
                       onChange={handlePickupChange}
                       onKeyDown={handlePickupKeyDown}
-                      placeholder="Search pickup location... (Press Enter to search)"
+                      onFocus={() => setShowPickupSuggestions(pickupSuggestions.length > 0)}
+                      onBlur={() => setTimeout(() => setShowPickupSuggestions(false), 100)}
+                      placeholder="Search pickup location..."
                     />
+                    {showPickupSuggestions && pickupSuggestions.length > 0 && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        background: 'white',
+                        border: '1px solid #ddd',
+                        borderTop: 'none',
+                        borderRadius: '0 0 8px 8px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        zIndex: 1000,
+                        maxHeight: '200px',
+                        overflowY: 'auto',
+                        marginTop: '-4px'
+                      }}>
+                        {pickupSuggestions.map((suggestion, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => selectSuggestion(suggestion, 'pickup')}
+                            style={{
+                              padding: '10px 12px',
+                              borderBottom: '1px solid #f0f0f0',
+                              cursor: 'pointer',
+                              fontSize: '0.9rem',
+                              color: '#1a1a1a'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          >
+                            {suggestion.display_name?.split(',')[0]}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {pickupLocation && (
                       <span
                         style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
@@ -297,15 +322,52 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                 </div>
                 <div className="calc-group" style={{position: 'relative'}} ref={deliveryContainerRef}>
                   <label><i className="fa-solid fa-location-dot" style={{color:'#ef4444'}}></i> Delivery Area</label>
-                  <div className="input-wrap">
+                  <div className="input-wrap" style={{ position: 'relative' }}>
                     <input
                       type="text"
                       ref={deliveryInputRef}
                       value={deliveryQuery}
                       onChange={handleDeliveryChange}
                       onKeyDown={handleDeliveryKeyDown}
-                      placeholder="Search delivery location... (Press Enter to search)"
+                      onFocus={() => setShowDeliverySuggestions(deliverySuggestions.length > 0)}
+                      onBlur={() => setTimeout(() => setShowDeliverySuggestions(false), 100)}
+                      placeholder="Search delivery location..."
                     />
+                    {showDeliverySuggestions && deliverySuggestions.length > 0 && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        background: 'white',
+                        border: '1px solid #ddd',
+                        borderTop: 'none',
+                        borderRadius: '0 0 8px 8px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        zIndex: 1000,
+                        maxHeight: '200px',
+                        overflowY: 'auto',
+                        marginTop: '-4px'
+                      }}>
+                        {deliverySuggestions.map((suggestion, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => selectSuggestion(suggestion, 'delivery')}
+                            style={{
+                              padding: '10px 12px',
+                              borderBottom: '1px solid #f0f0f0',
+                              cursor: 'pointer',
+                              fontSize: '0.9rem',
+                              color: '#1a1a1a'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                          >
+                            {suggestion.display_name?.split(',')[0]}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {deliveryLocation && (
                       <span
                         style={{position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#ef4444'}}
@@ -325,7 +387,7 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
               <div className="calc-group">
                 <label>Calculated Distance</label>
                 <div className="range-wrap">
-                  <span className="range-val" style={{textAlign:'left'}}><b id="main-dist-text">{distance}</b> KM (via fastest road)</span>
+                  <span className="range-val" style={{textAlign:'left'}}><b id="main-dist-text">{typeof distance === 'number' ? distance.toFixed(2) : distance}</b> KM (via fastest road)</span>
                 </div>
               </div>
 
@@ -361,7 +423,15 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                 </div>
               </div>
               
-              <button className="btn btn-primary btn-xl" style={{width:'100%', justifyContent:'center'}} onClick={() => onOpenModal('signup','merchant')}>
+              <button
+                className="btn btn-primary btn-xl"
+                style={{
+                  width:'100%',
+                  justifyContent:'center'
+                }}
+                disabled={!deliveryLocation}
+                onClick={() => onOpenModal('signup','merchant')}
+              >
                 Book This Delivery <i className="fa-solid fa-arrow-right"></i>
               </button>
             </div>

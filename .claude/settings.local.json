@@ -3,7 +3,8 @@
     "allow": [
       "Bash(pkill -f \"next dev\")",
       "Bash(pkill -f \"node\")",
-      "Bash(taskkill /PID 5464 /F)"
+      "Bash(taskkill /PID 5464 /F)",
+      "Bash(curl -s http://localhost:3000)"
     ]
   }
 }

@@ -29,7 +29,18 @@ export default function AuthModal({
     if (isOpen) {
       setMode(initialMode);
       setRole(initialRole);
+      // Lock scroll when modal opens
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '12px'; // Prevent layout shift from scrollbar
+    } else {
+      // Unlock scroll when modal closes
+      document.body.style.overflow = 'auto';
+      document.body.style.paddingRight = '0px';
     }
+    return () => {
+      document.body.style.overflow = 'auto';
+      document.body.style.paddingRight = '0px';
+    };
   }, [isOpen, initialMode, initialRole]);
 
   const handleSubmit = async (e: React.FormEvent) => {

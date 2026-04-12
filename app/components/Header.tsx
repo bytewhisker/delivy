@@ -41,9 +41,9 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
           <Link href="/about-us" className="nav-link" onClick={() => setMobileMenuOpen(false)}>About</Link>
         </div>
         <div className="nav-actions">
-          <button className="btn btn-ghost" onClick={() => onOpenModal?.('login')}>Login</button>
-          <button className="btn btn-primary" onClick={() => onOpenModal?.('signup', 'merchant')}>Get Started</button>
-          <button className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className="btn btn-ghost nav-btn" onClick={() => onOpenModal?.('login')}>Login</button>
+          <button className="btn btn-primary nav-btn" onClick={() => onOpenModal?.('signup', 'merchant')}>Get Started</button>
+          <button className={`hamburger ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -57,15 +57,39 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
             height: 100vh; width: 80%;
             background: white;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
+            padding-top: 100px;
             z-index: 999;
             transition: 0.5s;
             box-shadow: -10px 0 30px rgba(0,0,0,0.1);
             display: flex;
+            overflow-y: auto;
+            gap: 2rem;
           }
           .nav-links.mobile-active { right: 0; }
-          .hamburger { display: flex !important; }
+          .hamburger {
+            display: flex !important;
+            flex-direction: column;
+            gap: 6px;
+          }
+          .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--s);
+            border-radius: 2px;
+            transition: 0.3s;
+            display: block;
+          }
+          .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+          }
+          .hamburger.active span:nth-child(2) {
+            opacity: 0;
+          }
+          .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+          }
         }
       `}</style>
     </header>
