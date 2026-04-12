@@ -83,8 +83,13 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
 
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)},Dhaka,Bangladesh&format=json&limit=5`
+        `/api/search-location?q=${encodeURIComponent(query)}`
       );
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
       const results = await response.json();
 
       if (type === 'pickup') {
@@ -96,6 +101,14 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
       }
     } catch (error) {
       console.error('Search error:', error);
+      // Clear suggestions on error
+      if (type === 'pickup') {
+        setPickupSuggestions([]);
+        setShowPickupSuggestions(false);
+      } else {
+        setDeliverySuggestions([]);
+        setShowDeliverySuggestions(false);
+      }
     }
   };
 
@@ -174,12 +187,18 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   const handlePickupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setPickupQuery(val);
+    // Clear location coords if user modifies text (forces selection from suggestions)
+    setPickupCoords(null);
+    setPickupLocation(null);
     searchLocation(val, 'pickup');
   };
 
   const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setDeliveryQuery(val);
+    // Clear location coords if user modifies text (forces selection from suggestions)
+    setDeliveryCoords(null);
+    setDeliveryLocation(null);
     searchLocation(val, 'delivery');
   };
 
@@ -243,7 +262,7 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                       onKeyDown={handlePickupKeyDown}
                       onFocus={() => setShowPickupSuggestions(pickupSuggestions.length > 0)}
                       onBlur={() => setTimeout(() => setShowPickupSuggestions(false), 100)}
-                      placeholder="Search pickup location..."
+                      placeholder="Search pickup location or click map..."
                     />
                     {showPickupSuggestions && pickupSuggestions.length > 0 && (
                       <div style={{
@@ -305,7 +324,7 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                       onKeyDown={handleDeliveryKeyDown}
                       onFocus={() => setShowDeliverySuggestions(deliverySuggestions.length > 0)}
                       onBlur={() => setTimeout(() => setShowDeliverySuggestions(false), 100)}
-                      placeholder="Search delivery location..."
+                      placeholder="Search delivery location or click map..."
                     />
                     {showDeliverySuggestions && deliverySuggestions.length > 0 && (
                       <div style={{

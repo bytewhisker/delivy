@@ -14,10 +14,10 @@ export default function Footer() {
               Bangladesh's most reliable and fastest logistics partner. Empowering merchants and providing opportunities for riders across the nation.
             </p>
             <div className="social-links">
-              <a href="#"><i className="fa-brands fa-facebook-f"></i></a>
-              <a href="#"><i className="fa-brands fa-x-twitter"></i></a>
-              <a href="#"><i className="fa-brands fa-instagram"></i></a>
-              <a href="#"><i className="fa-brands fa-linkedin-in"></i></a>
+              <span style={{ cursor: 'not-allowed', opacity: 0.5 }}><i className="fa-brands fa-facebook-f"></i></span>
+              <span style={{ cursor: 'not-allowed', opacity: 0.5 }}><i className="fa-brands fa-x-twitter"></i></span>
+              <span style={{ cursor: 'not-allowed', opacity: 0.5 }}><i className="fa-brands fa-instagram"></i></span>
+              <span style={{ cursor: 'not-allowed', opacity: 0.5 }}><i className="fa-brands fa-linkedin-in"></i></span>
             </div>
           </div>
 
@@ -64,7 +64,6 @@ export default function Footer() {
           </div>
           <div className="footer-badges">
             <span className="location-badge"><i className="fa-solid fa-location-dot"></i> Dhaka, Bangladesh</span>
-            <span className="made-badge">Made with <i className="fa-solid fa-heart" style={{color: '#ff6b00'}}></i> for Merchants</span>
           </div>
         </div>
       </div>

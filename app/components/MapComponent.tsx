@@ -34,9 +34,10 @@ export default function MapComponent({ onDistanceChange, onLocationChange, picku
         scrollWheelZoom: false,
         touchZoom: false,
         dragging: true
-      }).setView(dhakaCoords, 12);
+      }).setView(dhakaCoords, 13);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // High-detail tile layer showing street names and numbers
+      L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19
       }).addTo(mapInstanceRef.current);
