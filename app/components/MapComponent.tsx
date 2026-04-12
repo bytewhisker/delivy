@@ -26,6 +26,11 @@ export default function MapComponent({ onDistanceChange, onLocationChange }: Map
         return;
       }
 
+      if (typeof L.Routing === 'undefined') {
+        setTimeout(initMap, 500);
+        return;
+      }
+
       if (mapRef.current) return;
 
       const dhakaCoords = [23.8103, 90.4125];
@@ -138,13 +143,16 @@ export default function MapComponent({ onDistanceChange, onLocationChange }: Map
     const reverseGeocode = async (latlng: any, type: 'pickup' | 'delivery') => {
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
+          `https://photon.komoot.io/reverse?lat=${latlng.lat}&lon=${latlng.lng}`
         );
         const data = await res.json();
-        const name = data.address?.suburb || data.address?.city || data.display_name?.split(',')[0] || 'Unknown Area';
+        const name = data.features?.[0]?.properties?.name || 
+                     data.features?.[0]?.properties?.city || 
+                     data.features?.[0]?.properties?.county || 
+                     'Dhaka Area';
         onLocationChange(type, name);
       } catch (err) {
-        onLocationChange(type, 'Unknown Area');
+        onLocationChange(type, 'Dhaka Area');
       }
     };
 

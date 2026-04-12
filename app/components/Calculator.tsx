@@ -77,14 +77,20 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
 
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}%2C%20Dhaka%2C%20Bangladesh&limit=5&countrycodes=bd`
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}%2C%20Dhaka%2C%20Bangladesh&limit=5&lang=en`
       );
       const data = await res.json();
+      const results = data.features?.map((f: any) => ({
+        display_name: f.properties.name + (f.properties.city ? ', ' + f.properties.city : '') + (f.properties.country ? ', ' + f.properties.country : ''),
+        lat: f.geometry.coordinates[1],
+        lon: f.geometry.coordinates[0]
+      })) || [];
+      
       if (type === 'pickup') {
-        setPickupResults(data);
+        setPickupResults(results);
         setShowPickupResults(true);
       } else {
-        setDeliveryResults(data);
+        setDeliveryResults(results);
         setShowDeliveryResults(true);
       }
     } catch (err) {
