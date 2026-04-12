@@ -69,19 +69,22 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
   };
 
   const searchLocations = async (query: string, type: 'pickup' | 'delivery') => {
-    if (query.length < 2) {
+    if (query.length < 1) {
       if (type === 'pickup') setPickupResults([]);
       else setDeliveryResults([]);
       return;
     }
 
     try {
+      const searchQuery = query.includes('Dhaka') ? query : `${query}, Dhaka, Bangladesh`;
       const res = await fetch(
-        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}%2C%20Dhaka%2C%20Bangladesh&limit=5&lang=en`
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(searchQuery)}&limit=8&lang=en`
       );
       const data = await res.json();
       const results = data.features?.map((f: any) => ({
-        display_name: f.properties.name + (f.properties.city ? ', ' + f.properties.city : '') + (f.properties.country ? ', ' + f.properties.country : ''),
+        display_name: f.properties.name || f.properties.city || query,
+        name: f.properties.name,
+        city: f.properties.city,
         lat: f.geometry.coordinates[1],
         lon: f.geometry.coordinates[0]
       })) || [];
@@ -95,25 +98,27 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
       }
     } catch (err) {
       console.error('Search error:', err);
+      if (type === 'pickup') setPickupResults([]);
+      else setDeliveryResults([]);
     }
   };
 
   const selectLocation = (result: any, type: 'pickup' | 'delivery') => {
-    const name = result.display_name?.split(',')[0] || query;
+    const displayName = result.city ? `${result.name}, ${result.city}` : (result.name || result.display_name);
     if (type === 'pickup') {
-      setPickupLocation(name);
-      setPickupQuery(name);
+      setPickupLocation(displayName);
+      setPickupQuery(displayName);
       setShowPickupResults(false);
       setPickupResults([]);
     } else {
-      setDeliveryLocation(name);
-      setDeliveryQuery(name);
+      setDeliveryLocation(displayName);
+      setDeliveryQuery(displayName);
       setShowDeliveryResults(false);
       setDeliveryResults([]);
     }
     
     if (typeof window !== 'undefined' && (window as any).searchLocation) {
-      (window as any).searchLocation(result.display_name?.split(',')[0] || query, type);
+      (window as any).searchLocation(displayName, type);
     }
   };
 
@@ -187,8 +192,11 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                     <div className="search-suggestions">
                       {pickupResults.map((result, idx) => (
                         <div key={idx} onClick={() => selectLocation(result, 'pickup')} className="suggestion-item">
-                          <div style={{fontWeight: 500}}>{result.display_name.split(',')[0]}</div>
-                          <div style={{fontSize: '11px', color: '#666'}}>{result.display_name.split(',').slice(1, 3).join(',')}</div>
+                          <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
+                            <i className="fa-solid fa-location-dot" style={{color: '#10b981', fontSize: '12px'}}></i>
+                            {result.name || result.display_name}
+                          </div>
+                          {result.city && <div style={{fontSize: '11px', color: '#666', marginLeft: '20px'}}>{result.city}</div>}
                         </div>
                       ))}
                     </div>
@@ -217,8 +225,11 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
                     <div className="search-suggestions">
                       {deliveryResults.map((result, idx) => (
                         <div key={idx} onClick={() => selectLocation(result, 'delivery')} className="suggestion-item">
-                          <div style={{fontWeight: 500}}>{result.display_name.split(',')[0]}</div>
-                          <div style={{fontSize: '11px', color: '#666'}}>{result.display_name.split(',').slice(1, 3).join(',')}</div>
+                          <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px'}}>
+                            <i className="fa-solid fa-location-dot" style={{color: '#ef4444', fontSize: '12px'}}></i>
+                            {result.name || result.display_name}
+                          </div>
+                          {result.city && <div style={{fontSize: '11px', color: '#666', marginLeft: '20px'}}>{result.city}</div>}
                         </div>
                       ))}
                     </div>
