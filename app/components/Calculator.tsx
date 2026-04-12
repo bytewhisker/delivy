@@ -9,13 +9,23 @@ const MapContainer = dynamic(() => import('./MapComponent'), {
 });
 
 const DHAKA_AREAS = [
-  'Uttara', 'Banani', 'Gulshan', 'Dhanmondi', 'Mirpur', 'Mohammadpur',
-  'Baridhara', 'Bashundhara', 'Niketon', 'Gulshan 2', 'Uttara Sector 1-10',
-  'Paltan', 'Motijheel', 'Agargaon', 'Badda', 'Mohanagar', 'Jatrabari',
-  'Demra', 'Narayanganj', 'Savar', 'Keraniganj', 'Kamrangirchar',
-  'Shahbagh', 'Lalbagh', 'Wari', 'Sutrapur', 'Kotwali', 'Cantonment',
-  'Panchaboti', 'Farmgate', 'Tejgaon', 'Khilgaon', 'Malibagh', 'Mugda',
-  'Shantinagar', 'Islampur', 'Kamalpur', 'Korail', 'Beribadh'
+  'Uttara', 'Uttara Model Town', 'Uttara Sector 1-10', 'Uttara Sector 11-13',
+  'Banani', 'Banani Model Town', 'Gulshan', 'Gulshan 2', 'Gulshan 1',
+  'Dhanmondi', 'Dhanmondi 27', 'Dhanmondi 15', 'Dhanmondi 32',
+  'Mirpur', 'Mirpur 1', 'Mirpur 2', 'Mirpur 6', 'Mirpur 10', 'Mirpur 11', 'Mirpur 12',
+  'Mohammadpur', 'Mohammadpur Bazar', 'Beribadh', 'Kamalpur',
+  'Baridhara', 'Baridhara DOHS', 'Bashundhara', 'Bashundhara R/A',
+  'Niketon', 'Gulshan Baridhara', 'Merul Badda', 'Badda', 'Badda DNCC',
+  'Paltan', 'Motivejheel', 'Kotwali', 'Lalbagh', 'Kamarchar', 'Wari',
+  'Agargaon', 'Sher-e-Bangla Nagar', 'Panchaboti', 'Farmgate',
+  'Tejgaon', 'Tejgaon I/A', 'Khilgaon', 'Malibagh', 'Mugda', 'Shantinagar',
+  'Shahbagh', 'Kadamtala', 'Islampur', 'Sutrapur', 'Jatrabari',
+  'Demra', 'Demra Colony', 'Sarulia', 'Narayanganj', 'Siddirganj',
+  'Savar', 'Savar Bazar', 'Zirabo', 'Ashulia', 'Gazipur',
+  'Keraniganj', 'Konda', 'Kaliakoir', 'Tongi', 'Gazipur Sadar',
+  'Cantonment', 'Mohanagar', 'Rampura', 'Bawni', 'Kuril', 'Khilkhet',
+  'Jahangir Nagar', 'Bhasantek', 'Azampur', 'Uttarkhan', 'Dakshinkhan',
+  'Shonir Akhra', 'Nayabazar', 'Chowkbazar', 'Dhamrai', 'Manikganj'
 ];
 
 interface CalculatorProps {
@@ -99,20 +109,67 @@ export default function Calculator({ onOpenModal }: CalculatorProps) {
       if (weight > 1) {
         surcharge = Math.ceil(weight - 1) * 20;
       }
-    } else {
-      const rates: any = {
-        scheduled: { parcel: [80, 80, 150, 200, 250, 350, 400], cake: [150, 150, 200, 250, 300, 350, 450] },
-        instant: { parcel: [100, 120, 160, 185, 220, 240, 300], cake: [160, 170, 210, 230, 260, 280, 350] }
+    } else if (service === 'instant') {
+      const instantRates = {
+        parcel: [
+          { max: 5, price: 100 },
+          { max: 10, price: 140 },
+          { max: 15, price: 180 },
+          { max: 20, price: 220 },
+          { max: 25, price: 270 },
+          { max: 30, price: 340 },
+          { max: 35, price: 400 },
+          { max: 99, price: 500 }
+        ],
+        cake: [
+          { max: 5, price: 140 },
+          { max: 10, price: 190 },
+          { max: 15, price: 240 },
+          { max: 20, price: 290 },
+          { max: 25, price: 340 },
+          { max: 30, price: 400 },
+          { max: 35, price: 460 },
+          { max: 99, price: 600 }
+        ]
       };
-
-      const distTiers = [3, 6, 9, 15, 24, 30, 99];
-      let tierIndex = distTiers.findIndex(t => distNum <= t);
-      if (tierIndex === -1) tierIndex = distTiers.length - 1;
-
-      base = rates[service][itemType][tierIndex];
-
-      if (weight > 3) {
-        surcharge = Math.ceil(weight - 3) * 20;
+      const tier = instantRates[itemType].find(t => distNum <= t.max);
+      base = tier ? tier.price : 500;
+      
+      if (itemType === 'cake') {
+        if (weight > 5) surcharge = Math.ceil(weight - 5) * 25;
+      } else {
+        if (weight > 3) surcharge = Math.ceil(weight - 3) * 20;
+      }
+    } else {
+      const scheduledRates = {
+        parcel: [
+          { max: 5, price: 80 },
+          { max: 10, price: 120 },
+          { max: 15, price: 160 },
+          { max: 20, price: 200 },
+          { max: 25, price: 250 },
+          { max: 30, price: 320 },
+          { max: 35, price: 380 },
+          { max: 99, price: 500 }
+        ],
+        cake: [
+          { max: 5, price: 120 },
+          { max: 10, price: 170 },
+          { max: 15, price: 220 },
+          { max: 20, price: 270 },
+          { max: 25, price: 320 },
+          { max: 30, price: 380 },
+          { max: 35, price: 440 },
+          { max: 99, price: 600 }
+        ]
+      };
+      const tier = scheduledRates[itemType].find(t => distNum <= t.max);
+      base = tier ? tier.price : 500;
+      
+      if (itemType === 'cake') {
+        if (weight > 5) surcharge = Math.ceil(weight - 5) * 25;
+      } else {
+        if (weight > 3) surcharge = Math.ceil(weight - 3) * 20;
       }
     }
 
