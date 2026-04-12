@@ -5,7 +5,7 @@ export default function Pricing() {
     <section id="pricing" className="pricing-section">
       <div className="container">
         <div className="pricing-header" data-aos="fade-up">
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 900 }}>Three Ways to <span className="gradient-text">Deliver</span></h2>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 900 }}>Simple Pricing for <span className="gradient-text">Local Businesses</span></h2>
         </div>
 
         <div className="pricing-cards-grid">
@@ -19,11 +19,11 @@ export default function Pricing() {
             <div className="price-display">
               <span className="price-type">From</span>
               <span className="taka-symbol">৳</span>
-              <span className="amount">80</span>
+              <span className="amount">100</span>
             </div>
             <ul className="price-features">
-              <li><i className="fa-solid fa-check"></i> Parcel & Food</li>
               <li><i className="fa-solid fa-check"></i> Cake Handling</li>
+              <li><i className="fa-solid fa-check"></i> Food Secure & Safe</li>
             </ul>
             <button className="pricing-cta">Join Now</button>
           </div>
@@ -39,7 +39,7 @@ export default function Pricing() {
             <div className="price-display">
               <span className="price-type">From</span>
               <span className="taka-symbol">৳</span>
-              <span className="amount">100</span>
+              <span className="amount">120</span>
             </div>
             <ul className="price-features">
               <li><i className="fa-solid fa-check"></i> 1-Hour Pickup</li>
@@ -58,7 +58,7 @@ export default function Pricing() {
             <div className="price-display">
               <span className="price-type">Flat</span>
               <span className="taka-symbol">৳</span>
-              <span className="amount">120</span>
+              <span className="amount">115</span>
             </div>
             <ul className="price-features">
               <li><i className="fa-solid fa-check"></i> 6-8 Hour Gap</li>

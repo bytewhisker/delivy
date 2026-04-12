@@ -13,8 +13,8 @@ export default function HowItWorks() {
               <i className="fa-solid fa-pen-to-square"></i>
               <div className="how-step-badge">1</div>
             </div>
-            <h3>Order Online</h3>
-            <p>Use our seamless merchant dashboard to book your parcel in under 60 seconds.</p>
+            <h3>Book Order</h3>
+            <p>Use our seamless dashboard to book your food or cake delivery in under 60 seconds.</p>
           </div>
           
           <div className="how-card" data-aos="fade-up" data-aos-delay="100">

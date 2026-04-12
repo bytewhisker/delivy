@@ -4,8 +4,17 @@ import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://deliverydei.com'),
-  title: 'Deliverydei | Bangladesh\'s Fastest Delivery Platform',
-  description: 'Join Deliverydei as a Merchant or Rider. Instant, Scheduled & Same-Day delivery for parcels, food, and cakes across Bangladesh.',
+  title: 'DeliveryDei – Fast Food, Cake & Parcel Delivery for Local Businesses in Bangladesh',
+  description: 'Support local businesses with DeliveryDei. Fast, safe & affordable delivery for food, cakes & parcels. The alternative to FoodPanda. No commission cuts, just reliable service.',
+  icons: {
+    icon: [
+      {
+        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="%23FF6B00"/><text x="90" y="130" font-size="120" font-weight="900" font-style="italic" font-family="Outfit, sans-serif" fill="white" text-anchor="middle" dominant-baseline="middle">D</text></svg>',
+        type: 'image/svg+xml',
+        sizes: 'any',
+      }
+    ],
+  },
 };
 
 export default function RootLayout({

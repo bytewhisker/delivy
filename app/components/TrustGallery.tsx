@@ -17,19 +17,19 @@ export default function TrustGallery() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <div className="gallery-overlay">
-              <p><i className="fa-solid fa-circle-check"></i> Standard Parcel Delivery</p>
+              <p><i className="fa-solid fa-circle-check"></i> Fresh Food Delivery</p>
             </div>
           </div>
           <div className="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-            <Image 
-              src="/images/customer2.png" 
-              alt="Fragile Item Delivery" 
-              width={600} 
+            <Image
+              src="/images/customer2.png"
+              alt="Safe Cake Delivery"
+              width={600}
               height={500}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <div className="gallery-overlay">
-              <p><i className="fa-solid fa-circle-check"></i> Handled with Special Care</p>
+              <p><i className="fa-solid fa-circle-check"></i> Cake & Desserts Safe</p>
             </div>
           </div>
         </div>
