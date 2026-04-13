@@ -45,14 +45,24 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
         <div className="nav-actions">
           <button className="btn btn-ghost nav-btn" onClick={() => onOpenModal?.('login')}>Login</button>
           <button className="btn btn-primary nav-btn" onClick={() => onOpenModal?.('signup', 'merchant')}>Get Started</button>
-          <button className={`hamburger ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button className={`hamburger ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
             <span></span><span></span><span></span>
           </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)} />
+        )}
       </nav>
       
       <style jsx>{`
         @media (max-width: 992px) {
+          .mobile-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+          }
           .nav-links {
             position: fixed;
             top: 0; right: -100%;
@@ -61,7 +71,7 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            padding-top: 100px;
+            padding-top: 80px;
             z-index: 999;
             transition: 0.5s;
             box-shadow: -10px 0 30px rgba(0,0,0,0.1);
@@ -70,10 +80,26 @@ export default function Header({ onOpenModal }: HeaderProps = {}) {
             gap: 2rem;
           }
           .nav-links.mobile-active { right: 0; }
+          .nav-links.mobile-active::before {
+            content: '✕';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f5f5f5;
+          }
           .hamburger {
             display: flex !important;
             flex-direction: column;
             gap: 6px;
+            z-index: 1001;
           }
           .hamburger span {
             width: 25px;
