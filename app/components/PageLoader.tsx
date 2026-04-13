@@ -17,12 +17,12 @@ export default function PageLoader() {
   return (
     <div id="page-loader" className={hidden ? 'hidden' : ''}>
       <div className="loader-content">
-        <Image 
-          src="/images/logo.png" 
-          alt="Deliverydei Logo" 
-          width={150} 
-          height={50} 
-          style={{ objectFit: 'contain', width: 'auto', height: 'auto' }} 
+        <Image
+          src="/images/logo.png"
+          alt="Deliverydei Logo"
+          width={150}
+          height={50}
+          style={{ objectFit: 'contain', width: '100%', height: 'auto', maxWidth: '150px', margin: '0 auto', display: 'block' }}
         />
         <div className="loader-track">
           <div className="loader-scooter">
