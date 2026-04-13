@@ -73,7 +73,9 @@ img[alt*="logo"], img[alt*="Logo"], img[alt*="customer"], img[alt*="Customer"] {
 
 .loader-content {
     text-align: center;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .loader-content img {
